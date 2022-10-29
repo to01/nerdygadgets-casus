@@ -478,3 +478,10 @@ ul#ul-class-price li {
     border: 1px rgb(98, 158, 255) solid;
     color: #fff;
 }
+.CartHeader {
+    font-family: pt-sans, sans-serif;
+    color: #fff;
+    font-size: 40px;
+    text-transform: uppercase;
+    font-weight: bold;
+}

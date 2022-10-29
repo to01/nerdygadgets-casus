@@ -46,8 +46,14 @@ $databaseConnection = connectToDatabase();
                 </li>
             </ul>
         </div>
+        <div class="col-9" id="Cart">
+            <ul id="ul-class-navigation">
+                <li>
+                    <a href="cart.php" class="HrefDecoration"><i class="fas fa-shopping-cart cart"></i></a>
+                </li>
+            </ul>
+        </div>
 <!-- code voor US3: zoeken -->
-
 <ul id="ul-class-navigation">
             <li>
                 <a href="browse.php" class="HrefDecoration"><i class="fas fa-search search"></i> Zoeken</a>
