@@ -1,6 +1,5 @@
 <!-- de inhoud van dit bestand wordt bovenaan elke pagina geplaatst -->
 <?php
-session_start();
 include "database.php";
 $databaseConnection = connectToDatabase();
 ?>
