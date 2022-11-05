@@ -30,8 +30,8 @@ a {
     color:#000000;
 }
 a:hover {
-     text-decoration: none !important;
- }
+    text-decoration: none !important;
+}
 a span {
     display: none;
     position: absolute;
@@ -484,4 +484,8 @@ ul#ul-class-price li {
     font-size: 40px;
     text-transform: uppercase;
     font-weight: bold;
+}
+/* this is a class which removes the linebreak at the end of h1/2/3/etc */
+.nobreak {
+    display: inline;
 }
