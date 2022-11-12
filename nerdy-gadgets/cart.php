@@ -66,7 +66,7 @@ foreach($cart as $id => $hoeveelheid) {
     </td>
     <form method='post'>
     <td style='width:5%'>
-    <input name='Verwijderen".$id."' value='Verwijderen' type='submit' Style='Height: 50px; width:100px;'>
+    <input name='Verwijderen".$id."' value='Verwijderen' type='submit' Style='Height: 50px; width:120px;'>
     </td>
     <td style='width:5%'>
     <input name='+".$id."' value='+' type='submit'>
