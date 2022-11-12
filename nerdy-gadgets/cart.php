@@ -23,8 +23,10 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 </head>
 <body>
 <h1>Inhoud Winkelwagen</h1>
+<hr style="background-color:#676EFF">
 <?php
 $cart = getCart();
+$totaalprijs = 0;
 foreach($cart as $id => $hoeveelheid) {
     $query = "SELECT ImagePath FROM stockitemimages WHERE StockItemID = ".$id;
     $result = mysqli_query($connection, $query);
@@ -53,6 +55,8 @@ foreach($cart as $id => $hoeveelheid) {
     $result = mysqli_query($connection, $query);
     $row = mysqli_fetch_row($result);
     $prijs = $row[0];
+    $prijs1 = $prijs * $hoeveelheid;
+    $totaalprijs += $prijs1;
     print("
     <td style='width:30%'>
     <a class='StockItemName' href='view.php?id=".$id."'>".$name."</a>
@@ -65,27 +69,23 @@ foreach($cart as $id => $hoeveelheid) {
     <input name='+".$id."' value='+' type='submit'>
     </td>
     <td style='width:5%'>
-    <input name='min".$id."' value='-' type='submit'>
+    <input name='-".$id."' value='-' type='submit'>
     </td>
     </form>
     ");
     if (isset($_POST["+".$id])) {              // zelfafhandelend formulier
         addProductToCart($id);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
-    } elseif (isset($_POST["min".$id])) {              // zelfafhandelend formulier
+    } elseif (isset($_POST["-".$id])) {              // zelfafhandelend formulier
         removeProductFromCart($id);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
     }
     print("
     <td>
-    <h4 class='StockItemPriceText'>".round($prijs,2)."</h4>
+    <h4 class='StockItemPriceText'>" . sprintf("€ %.2f", $prijs1) . "</h4>
     </td>
     ");
 }
-print("</table>");
-//gegevens per artikelen in $cart (naam, prijs, etc.) uit database halen
-//totaal prijs berekenen
-//mooi weergeven in html
-//etc.
-
+print("</table><br>");
+print("<h5 class='StockItemPriceText'>" . "Totaalprijs: " . sprintf("€ %.2f", $totaalprijs) .  "</h5>");
 ?>
 </body>
 </html>
