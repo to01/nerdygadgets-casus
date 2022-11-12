@@ -75,8 +75,10 @@ foreach($cart as $id => $hoeveelheid) {
     ");
     if (isset($_POST["+".$id])) {              // zelfafhandelend formulier
         addProductToCart($id);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
+        print("<meta http-equiv='refresh' content='0'>");
     } elseif (isset($_POST["-".$id])) {              // zelfafhandelend formulier
         removeProductFromCart($id);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
+        print("<meta http-equiv='refresh' content='0'>");
     }
     print("
     <td>
