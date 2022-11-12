@@ -38,3 +38,11 @@ function removeProductFromCart($stockItemID){
 
     saveCart($cart);                            // werk de "gedeelde" $_SESSION["cart"] bij met de bijgewerkte cart
 }
+function deleteProductFromCart($stockItemID){
+    $cart = getCart();
+
+    if(array_key_exists($stockItemID, $cart)) {
+        unset($cart[$stockItemID]);
+    }
+    saveCart($cart);
+}
