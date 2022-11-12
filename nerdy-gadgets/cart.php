@@ -66,6 +66,9 @@ foreach($cart as $id => $hoeveelheid) {
     </td>
     <form method='post'>
     <td style='width:5%'>
+    <input name='Verwijderen".$id."' value='Verwijderen' type='submit' Style='Height: 50px; width:100px;'>
+    </td>
+    <td style='width:5%'>
     <input name='+".$id."' value='+' type='submit'>
     </td>
     <td style='width:5%'>
@@ -73,6 +76,10 @@ foreach($cart as $id => $hoeveelheid) {
     </td>
     </form>
     ");
+    if (isset($_POST["Verwijderen".$id])) {
+        deleteProductFromCart($id);
+        print("<meta http-equiv='refresh' content='0'>");
+    }
     if (isset($_POST["+".$id])) {              // zelfafhandelend formulier
         addProductToCart($id);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
         print("<meta http-equiv='refresh' content='0'>");
