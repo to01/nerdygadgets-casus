@@ -30,9 +30,9 @@ function removeProductFromCart($stockItemID){
     $cart = getCart();                          // eerst de huidige cart ophalen
 
     if (array_key_exists($stockItemID, $cart)) {  //controleren of $stockItemID(=key!) al in array staat
-        $cart[$stockItemID] -= 1;                   //zo ja:  aantal met 1 verhogen
+        $cart[$stockItemID] -= 1;                   //zo ja:  aantal met 1 verlagen
         if($cart[$stockItemID] <= 0) {
-            unset($cart[$stockItemID]);             // verwijdert het product uit de winkelmand als de hoeveelheid kleiner dan 0 is
+            unset($cart[$stockItemID]);             // verwijdert het product uit de winkelmand als de hoeveelheid kleiner dan of gelijk aan 0 is
         }
     }
 
@@ -42,7 +42,7 @@ function deleteProductFromCart($stockItemID){
     $cart = getCart();
 
     if(array_key_exists($stockItemID, $cart)) {
-        unset($cart[$stockItemID]);
+        unset($cart[$stockItemID]);                 // verwijdert het product uit de winkelmand door het passende element uit de array te gooien
     }
     saveCart($cart);
 }
