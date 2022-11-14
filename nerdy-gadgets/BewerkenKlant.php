@@ -4,6 +4,7 @@
 <body>
 <?php
 include 'klantfuncties.php';
+include 'header.php';
 $gegevens["nummer"] = isset($_GET["nummer"]) ? $_GET["nummer"] : 0;
 if (isset($_GET["bewerken"])) {
     $gegevens["naam"] = isset($_GET["naam"]) ? $_GET["naam"] : "";
