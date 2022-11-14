@@ -5,7 +5,7 @@
 <?php
 include 'klantfuncties.php';
 include 'header.php';
-$gegevens["nummer"] = isset($_GET["nummer"]) ? $_GET["nummer"] : 0;
+$gegevens["nummer"] = isset($_GET["nummer"]) ? $_GET["nummer"] : 0; // stelt het klantnummer in
 if (isset($_GET["bewerken"])) {
     $gegevens["naam"] = isset($_GET["naam"]) ? $_GET["naam"] : "";
     $gegevens["woonplaats"] = isset($_GET["woonplaats"]) ? $_GET["woonplaats"] : "";
@@ -20,7 +20,7 @@ if (isset($_GET["bewerken"])) {
     <label>Woonplaats</label>
     <input type="text" name="woonplaats" value="<?php print($gegevens["woonplaats"]); ?>" />
     <label>Nummer</label>
-    <input tupe="number" name="nummer" value="<?php print($gegevens["nummer"]); ?>">
+    <input tupe="number" name="nummer" value="<?php print($gegevens["nummer"]); ?>"> <!-- input voor klantnummer, niet nodig maar het is handig en extra functionaliteit -->
     <input type="submit" name="bewerken" value="Bewerken" />
 </form>
 <br><?php print($gegevens["melding"]); ?><br>
