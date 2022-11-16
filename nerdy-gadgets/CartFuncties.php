@@ -46,3 +46,8 @@ function deleteProductFromCart($stockItemID){
     }
     saveCart($cart);
 }
+function setProductAmmount($stockItemID, $amount) {
+    $cart = getCart();
+    $cart[$stockItemID] = $amount;
+    saveCart($cart);
+}

@@ -22,7 +22,7 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
     <title>Winkelwagen</title>
 </head>
 <body>
-<h1>Inhoud Winkelwagen</h1>
+<h1 class="CartHeader">Inhoud Winkelwagen</h1>
 <hr style="background-color:#676EFF">
 <?php
 $cart = getCart();
@@ -58,21 +58,26 @@ foreach($cart as $id => $hoeveelheid) {
     $prijs1 = $prijs * $hoeveelheid;
     $totaalprijs += $prijs1;
     print("
-    <td style='width:30%'>
-    <a class='StockItemName' href='view.php?id=".$id."'>".$name."</a>
+    <td style='width:40%'>
+    <a class='CartName' href='view.php?id=".$id."'>".$name."</a>
+<!--    <h3 class='CartAmount'>hoeveelheid: ".$hoeveelheid."</h3>-->
     <br>
-    <h3 class='StockItemID'>hoeveelheid: ".$hoeveelheid."</h3>
-    <h2 class='StockItemID nobreak'>id: ".$id."</h2>
+    <h2 class='CartId nobreak'>Artikelnummer: ".$id."</h2>
     </td>
     <form method='post'>
     <td style='width:5%'>
-    <input name='Verwijderen".$id."' value='Verwijderen' type='submit' Style='Height: 50px; width:120px;'>
+    <input style='font-family: FontAwesome; background: none; border: none; font-size: xx-large; color: #676EFF' name='submit".$id."' value='&#xf0c7' type='submit'>
+    </td>
+    <td style='width:10%'>
+    <input class='CartAmount' name='amount".$id."' value='".$hoeveelheid."' type='number'>
     </td>
     <td style='width:5%'>
-    <input name='+".$id."' value='+' type='submit'>
+    <input style='font-family: FontAwesome; background: none; border: none; font-size: xx-large; color: #676EFF' name='Verwijderen".$id."' value='&#xf1f8' type='submit'>
     </td>
-    <td style='width:5%'>
-    <input name='-".$id."' value='-' type='submit'>
+    <td>
+    <h4 class='StockItemPriceText'>" . sprintf("€ %.2f", $prijs1) . "</h4>
+    <h4 class='CartId'>" . sprintf("€ %.2f", $prijs) . " per stuk</h4>
+    <h4 style='font-size: 1rem'>Inclusief BTW</h4>
     </td>
     </form>
     ");
@@ -86,11 +91,12 @@ foreach($cart as $id => $hoeveelheid) {
     } elseif (isset($_POST["-".$id])) {              // zelfafhandelend formulier
         removeProductFromCart($id);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
         print("<meta http-equiv='refresh' content='0'>");
+    } elseif (isset($_POST["submit".$id])) {              // zelfafhandelend formulier
+        setProductAmmount($id, $_POST["amount".$id]);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
+        print("<meta http-equiv='refresh' content='0'>");
     }
     print("
-    <td>
-    <h4 class='StockItemPriceText'>" . sprintf("€ %.2f", $prijs1) . "</h4>
-    </td>
+
     ");
 }
 print("</table><br>");

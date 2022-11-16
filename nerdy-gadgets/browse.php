@@ -1,6 +1,7 @@
 <!-- dit bestand bevat alle code voor het productoverzicht -->
 <?php
 include __DIR__ . "/header.php";
+include "CartFuncties.php";
 
 $ReturnableResult = null;
 $Sort = "SellPrice";
@@ -280,6 +281,15 @@ if (isset($amount)) {
                     <h1 class="StockItemID">Artikelnummer: <?php print $row["StockItemID"]; ?></h1>
                     <p class="StockItemName"><?php print $row["StockItemName"]; ?></p>
                     <p class="StockItemComments"><?php print $row["MarketingComments"]; ?></p>
+                    <form method="post">
+                        <input type="submit" name="submit<?php print($row["StockItemID"])?>" value="Voeg toe aan winkelmandje" style="height:30px; width:250px; background-color:#23232F; color:#676EFF; border-color:#676EFF"><br><br>
+                    </form>
+                    <?php
+                    if(isset($_POST["submit".$row["StockItemID"]])) {
+                        addProductToCart($row["StockItemID"]);
+                        print("<p style='color: white'>Product toegevoegd</p>");
+                    }
+                    ?>
                     <h4 class="ItemQuantity"><?php print getVoorraadTekst($row["QuantityOnHand"]); ?></h4>
                 </div>
             <!--  coderegel 2 van User story: bekijken producten  -->
