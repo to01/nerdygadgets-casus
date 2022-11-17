@@ -51,3 +51,14 @@ function setProductAmmount($stockItemID, $amount) {
     $cart[$stockItemID] = $amount;
     saveCart($cart);
 }
+function addProductAmountToCart($stockItemID, $amount){
+    $cart = getCart();                          // eerst de huidige cart ophalen
+
+    if (array_key_exists($stockItemID, $cart)) {  //controleren of $stockItemID(=key!) al in array staat
+        $cart[$stockItemID] += $amount;                   //zo ja:  aantal met 1 verhogen
+    } else {
+        $cart[$stockItemID] = $amount;                    //zo nee: key toevoegen en aantal op 1 zetten.
+    }
+
+    saveCart($cart);                            // werk de "gedeelde" $_SESSION["cart"] bij met de bijgewerkte cart
+}

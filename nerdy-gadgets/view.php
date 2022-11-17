@@ -93,8 +93,10 @@ include "cartfuncties.php";
             <div id="StockItemHeaderLeft">
                 <div class="CenterPriceLeft">
                     <div class="CenterPriceLeftChild">
+                        <br>
+                        <br>
                         <p class="StockItemPriceText"><b><?php print sprintf("€ %.2f", $StockItem['SellPrice']); ?></b></p>
-                        <h6> Inclusief BTW </h6><br><br>
+                        <h6 class="nobreak"> Inclusief BTW </h6><br><br>
 
                         <?php
                         //?id=1 handmatig meegeven via de URL (gebeurt normaal gesproken als je via overzicht op artikelpagina terechtkomt)
@@ -104,19 +106,22 @@ include "cartfuncties.php";
                             $stockItemID = 0;
                         }
                         ?>
-                        <h7 style="font-size: 17px">Product <?php print($stockItemID) ?></h7>
 
                         <!-- formulier via POST en niet GET om te zorgen dat refresh van pagina niet het artikel onbedoeld toevoegt-->
                         <form method="post">
                             <input type="number" name="stockItemID" value="<?php print($stockItemID) ?>" hidden>
-                            <input type="submit" name="submit" value="Voeg toe aan winkelmandje" style="height:30px; width:250px; background-color:#23232F; color:#676EFF; border-color:#676EFF"><br><br>
+                            <input type="submit" name="submit" value="Voeg toe aan winkelmandje" style="height:30px; width:250px; background-color:#23232F; color:#676EFF; border-color:#676EFF">
+                            <input type="number" name="amount" value="1" style="height:30px; width:250px; background-color:#23232F; color:#FFFFFF; border-color:#676EFF">
                         </form>
                         <?php
                         if (isset($_POST["submit"])) {              // zelfafhandelend formulier
                             $stockItemID = $_POST["stockItemID"];
-                            addProductToCart($stockItemID);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
-                            print("Product toegevoegd");
-                            print("<a href='cart.php'> Winkelmand bekijken</a>");
+                            if($_POST["amount"] <= 0) {
+                            } else {
+                                addProductAmountToCart($stockItemID, $_POST["amount"]);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
+                                print("Product toegevoegd");
+                                print("<a href='cart.php'> Winkelmand bekijken</a>");
+                            }
                         }
                         ?>
                     </div>

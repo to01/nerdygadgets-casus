@@ -84,15 +84,11 @@ foreach($cart as $id => $hoeveelheid) {
     if (isset($_POST["Verwijderen".$id])) {
         deleteProductFromCart($id);
         print("<meta http-equiv='refresh' content='0'>");
-    }
-    if (isset($_POST["+".$id])) {              // zelfafhandelend formulier
-        addProductToCart($id);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
-        print("<meta http-equiv='refresh' content='0'>");
-    } elseif (isset($_POST["-".$id])) {              // zelfafhandelend formulier
-        removeProductFromCart($id);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
-        print("<meta http-equiv='refresh' content='0'>");
     } elseif (isset($_POST["submit".$id])) {              // zelfafhandelend formulier
-        setProductAmmount($id, $_POST["amount".$id]);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
+        if($_POST["amount".$id] <= 0) {
+        } else {
+            setProductAmmount($id, $_POST["amount" . $id]);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
+        }
         print("<meta http-equiv='refresh' content='0'>");
     }
     print("
