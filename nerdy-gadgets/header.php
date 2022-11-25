@@ -3,16 +3,16 @@
 session_start();
 include "database.php";
 function countCart() {
-    if (isset($_SESSION['cart'])) {               //controleren of winkelmandje (=cart) al bestaat
-        $cart = $_SESSION['cart'];                  //zo ja:  ophalen
+    if (isset($_SESSION['cart'])) { //volledigheid van getCart() hier omdat je m anders 2 keer aanroept en glitches krijgt
+        $cart = $_SESSION['cart'];
     } else {
-        $cart = array();                            //zo nee: dan een nieuwe (nog lege) array
-    }
+        $cart = array();
+    } // eind getCart()
     $i = 0;
     foreach($cart as $id => $amount) {
         $i += $amount;
     }
-    return $i;
+    return $i; // $i is het totaal aantal producten in de cart
 }
 $databaseConnection = connectToDatabase();
 ?>
