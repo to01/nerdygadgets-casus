@@ -288,6 +288,7 @@ if (isset($amount)) {
                     if(isset($_POST["submit".$row["StockItemID"]])) {
                         addProductToCart($row["StockItemID"]);
                         print("<p style='color: white'>Product toegevoegd</p>");
+                        print("<meta http-equiv='refresh' content='1'>");
                     }
                     ?>
                     <h4 class="ItemQuantity"><?php print getVoorraadTekst($row["QuantityOnHand"]); ?></h4>
