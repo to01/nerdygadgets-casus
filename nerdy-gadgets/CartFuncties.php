@@ -1,7 +1,5 @@
 <?php
 
-session_start();                                // altijd hiermee starten als je gebruik wilt maken van sessiegegevens
-
 function getCart(){
     if (isset($_SESSION['cart'])) {               //controleren of winkelmandje (=cart) al bestaat
         $cart = $_SESSION['cart'];                  //zo ja:  ophalen
@@ -40,13 +38,12 @@ function removeProductFromCart($stockItemID){
 }
 function deleteProductFromCart($stockItemID){
     $cart = getCart();
-
     if(array_key_exists($stockItemID, $cart)) {
         unset($cart[$stockItemID]);                 // verwijdert het product uit de winkelmand door het passende element uit de array te gooien
     }
     saveCart($cart);
 }
-function setProductAmmount($stockItemID, $amount) {
+function setProductAmount($stockItemID, $amount) {
     $cart = getCart();
     $cart[$stockItemID] = $amount;
     saveCart($cart);
