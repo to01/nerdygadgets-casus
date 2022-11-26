@@ -78,9 +78,11 @@ $databaseConnection = connectToDatabase();
         <!-- code voor US3: zoeken -->
         <ul id="ul-class-navigation">
             <li>
-                <a href="cart.php" class="HrefDecoration"><i class="fa badge fa-lg" value=<?php print(countCart()) ?>>&#xf07a;</i>
-                    &nbsp&nbsp&nbsp
-                    <a href="browse.php" class="HrefDecoration"><i class="fas fa-search search"></i> Zoeken </a>
+                <a href="InlogPagina.php" class="HrefDecoration"><i class="fas fa-user"></i>
+                    &nbsp
+                    <a href="cart.php" class="HrefDecoration"><i class="fas fa-shopping-cart cart"></i>
+                        &nbsp&nbsp&nbsp
+                        <a href="browse.php" class="HrefDecoration"><i class="fas fa-search search"></i> Zoeken </a>
             </li>
         </ul>
 
