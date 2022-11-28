@@ -114,13 +114,29 @@ include "cartfuncties.php";
                             <input type="number" name="amount" value="1" style="height:30px; width:250px; background-color:#23232F; color:#FFFFFF; border-color:#676EFF">
                         </form>
                         <?php
+                            
                         if (isset($_POST["submit"])) {              // zelfafhandelend formulier
-                            $stockItemID = $_POST["stockItemID"];
-                            if($_POST["amount"] <= 0) {
+                            $query = "SELECT QuantityOnHand FROM stockitemholdings WHERE StockItemID = " . $stockItemID;
+                            $result = mysqli_query($connection, $query);
+                            $row = mysqli_fetch_array($result);
+                            $hoeveelheid = $row[0];
+                            $cart = getCart();
+                            if ($_POST["amount"] > $hoeveelheid || ($_POST["amount"] + $cart["$stockItemID"]) > $hoeveelheid) {
+                                print("De gevraagde hoeveelheid ligt boven de voorraad!");
                             } else {
-                                addProductAmountToCart($stockItemID, $_POST["amount"]);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
-                                print("Product toegevoegd");
-                                print("<a href='cart.php'> Winkelmand bekijken</a>");
+                                $stockItemID = $_POST["stockItemID"];
+                                if ($_POST["amount"] >= 1 && $_POST["amount"] == number_format($_POST["amount"], 0, ',', '.')) {
+                                    $_POST["amount"] = rtrim(rtrim(number_format($_POST["amount"], '0')));
+                                    addProductAmountToCart($stockItemID, $_POST["amount"]);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
+                                    print("Product toegevoegd");
+                                    print("<a href='cart.php'> Winkelmand bekijken</a>");
+                                } elseif ($_POST["amount"] >= 1) {
+                                    addProductAmountToCart($stockItemID, $_POST["amount"]);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
+                                    print("Product toegevoegd");
+                                    print("<a href='cart.php'> Winkelmand bekijken</a>");
+                                } else {
+                                    print("Voer een geldig cijfer in!");
+                                }
                             }
                         }
                         ?>
