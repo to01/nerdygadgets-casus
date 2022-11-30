@@ -1,5 +1,11 @@
 <?php
 include "header.php";
+$host = "localhost";
+$user = "root";
+$pass = ""; //eigen password invullen
+$databasename = "nerdygadgets";
+$port = 3306;
+$connection = mysqli_connect($host, $user, $pass, $databasename, $port);
 ?>
 <table style="width: 100%">
     <tr>
@@ -44,3 +50,16 @@ include "header.php";
 </form>
 </table>
 </table>
+<?php
+if(isset($_POST["Inlogsubmit"])) {
+    $naam = $_POST["BestelNaam"];
+    $land = $_POST["Land"];
+    $adres = $_POST["BestelAdres"];
+    $postcode = $_POST["BestelPostcode"];
+    $telnr = $_POST["phone"];
+    $email = $_POST["E-mail"];
+    $password = $_POST["wachtwoord"];
+    $query = "INSERT INTO webshopklant VALUES ((SELECT max(WebCustomerID)+1 FROM webshopklant w),\""."$naam"."\",\""."$land"."\",\""."$adres"."\",\""."$postcode"."\","."$telnr".",\""."$email"."\",\""."$password"."\",1)";
+    $result = mysqli_query($connection, $query);
+
+}

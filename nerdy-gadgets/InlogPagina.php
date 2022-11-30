@@ -1,5 +1,11 @@
 <?php
 include "header.php";
+$host = "localhost";
+$user = "root";
+$pass = ""; //eigen password invullen
+$databasename = "nerdygadgets";
+$port = 3306;
+$connection = mysqli_connect($host, $user, $pass, $databasename, $port);
 ?>
 <table style="width: 100%">
     <tr>
@@ -18,9 +24,22 @@ include "header.php";
             </tr>
             <tr>
                 <td style="width: 160px"></td>
-                <td><input style="height: 10%; background-color:#23232F; color:#676EFF; border-color:#676EFF" type="submit" name="BestelSubmit" value="Inloggen" ></td>
+                <td><input style="height: 10%; background-color:#23232F; color:#676EFF; border-color:#676EFF" type="submit" name="InlogSubmit" value="Inloggen" ></td>
             </tr>
         </table>
     </form>
 </table>
-<a href="RegistreerPagina.php" style="color:#3366CC;" class="HrefDecoration"> <u> Geen account? Klik hier </u> </a>
+<a href="RegisteerPagina.php" style="color:#3366CC;" class="HrefDecoration"> <u> Geen account? Klik hier </u> </a>
+<?php
+if(isset($_POST["InlogSubmit"])) {
+    $email = $_POST["E-mail"];
+    $wachtwoord = $_POST["wachtwoord"];
+    $query = "SELECT WebCustomerID FROM webshopklant WHERE CustomerEmail = \"".$email."\" AND CustomerPassword = \"".$wachtwoord."\" AND isloggable = 1";
+    $result = mysqli_query($connection, $query);
+    $row = mysqli_fetch_row($result);
+    if(isset($row[0])) {
+        print("<br>U bent ingelogd<br>");
+        print("<meta http-equiv='refresh' content='1; url=\".\"' />");
+    }
+    $_SESSION["inlogstatus"] = True;
+}

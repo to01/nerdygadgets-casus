@@ -77,8 +77,17 @@ $databaseConnection = connectToDatabase();
         </div>
         <!-- code voor US3: zoeken -->
         <ul id="ul-class-navigation">
-            <li>
-                <a href="InlogPagina.php" class="HrefDecoration"><i class="fas fa-user"></i>
+            <li><?php
+                if(isset($_SESSION["inlogstatus"])) {
+                    if($_SESSION["inlogstatus"] = True) {
+                        print('<a href="InlogPagina.php" style="color: lawngreen" class="HrefDecoration"><i class="fas fa-user"></i>');
+                    } else {
+                        print('<a href="InlogPagina.php" class="HrefDecoration"><i class="fas fa-user"></i>');
+                    }
+                } else {
+                    print('<a href="InlogPagina.php" class="HrefDecoration"><i class="fas fa-user"></i>');
+                }
+                ?>
                     &nbsp
                     <a href="cart.php" class="HrefDecoration"><i class="fas fa-shopping-cart cart"></i>
                         &nbsp&nbsp&nbsp

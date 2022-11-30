@@ -1,6 +1,12 @@
 <!-- dit bestand bevat alle code voor de pagina die één product laat zien -->
 <?php
 include __DIR__ . "/header.php";
+$host = "localhost";
+$user = "root";
+$pass = ""; //eigen password invullen
+$databasename = "nerdygadgets";
+$port = 3306;
+$connection = mysqli_connect($host, $user, $pass, $databasename, $port);
 
 $StockItem = getStockItem($_GET['id'], $databaseConnection);
 $StockItemImage = getStockItemImage($_GET['id'], $databaseConnection);
@@ -114,13 +120,16 @@ include "cartfuncties.php";
                             <input type="number" name="amount" value="1" style="height:30px; width:250px; background-color:#23232F; color:#FFFFFF; border-color:#676EFF">
                         </form>
                         <?php
-                            
+
                         if (isset($_POST["submit"])) {              // zelfafhandelend formulier
                             $query = "SELECT QuantityOnHand FROM stockitemholdings WHERE StockItemID = " . $stockItemID;
                             $result = mysqli_query($connection, $query);
                             $row = mysqli_fetch_array($result);
                             $hoeveelheid = $row[0];
                             $cart = getCart();
+                            if(empty($cart["$stockItemID"])) {
+                                $cart["$stockItemID"] = 0;
+                            }
                             if ($_POST["amount"] > $hoeveelheid || ($_POST["amount"] + $cart["$stockItemID"]) > $hoeveelheid) {
                                 print("De gevraagde hoeveelheid ligt boven de voorraad!");
                             } else {
@@ -156,8 +165,8 @@ include "cartfuncties.php";
             if (is_array($CustomFields)) { ?>
                 <table>
                 <thead>
-                <th>Naam</th>
-                <th>Data</th>
+                <th>Naam:</th>
+                <th>Data:</th>
                 </thead>
                 <?php
                 foreach ($CustomFields as $SpecName => $SpecText) { ?>
