@@ -23,4 +23,4 @@ include "header.php";
         </table>
     </form>
 </table>
-<a href="RegisteerPagina.php" style="color:#3366CC;" class="HrefDecoration"> <u> Geen account? Klik hier </u> </a>
+<a href="RegistreerPagina.php" style="color:#3366CC;" class="HrefDecoration"> <u> Geen account? Klik hier </u> </a>
