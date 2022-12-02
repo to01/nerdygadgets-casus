@@ -9,14 +9,14 @@ $port = 3306;
 $connection = mysqli_connect($host, $user, $pass, $databasename, $port);
 ?>
 <h1 class="TextMain" style="margin-left: 5px; margin-top: 5px">Bestellen </h1>
-<form method="post" action="https://www.ideal.nl/demo/qr/?app=ideal">
+<form method="post">
     <table>
         <tr> <!-- Radio -->
             <td style="width: 160px"></td>
             <td>Particulier:</td>
-            <td><input style="height: 10%" type="radio" name="besteller" value="particulier" required checked></td>
+            <td><input style="height: 10%" type="radio" name="besteller" value="0" required checked></td>
             <td>Zakelijk:</td>
-            <td><input style="height: 10%" type="radio" name="besteller" value="zakelijk"></td>
+            <td><input style="height: 10%" type="radio" name="besteller" value="1"></td>
         </tr>
     </table>
     <table>
@@ -50,6 +50,27 @@ $connection = mysqli_connect($host, $user, $pass, $databasename, $port);
         </tr>
     </table>
 </form>
+<?php
+date_default_timezone_set('Europe/Amsterdam');
+if(isset($_POST["BestelSubmit"])) {
+    if (isset($_SESSION["WebCustomerID"])) {
+        $id = $_SESSION["WebCustomerID"];
+        $query = "SELECT * FROM webshopklant WHERE WebCustomerID = ".$id;
+        $result = mysqli_query($connection, $query);
+        $row = mysqli_fetch_row($result);
+        $sqlemail = $row[6];
+        if($sqlemail == $_POST["E-mail"]) {
+            $date = date("Y-m-d");
+            $business = $_POST["besteller"];
+            $query = "INSERT INTO webshoporders VALUES ((SELECT max(WebOrderID)+1 FROM webshoporders w)," . $id . ",'" . $date . "'," . $business . ")";
+            $result = mysqli_query($connection, $query);
+            print("<meta http-equiv='refresh' content='0; url=https://www.ideal.nl/demo/qr/?app=ideal'>");
+        } else {
+            // hier komt later een query
+        }
+    }
+}
+?>
 <br>
     <!DOCTYPE html>
     <html lang="nl">

@@ -39,7 +39,8 @@ if(isset($_POST["InlogSubmit"])) {
     $row = mysqli_fetch_row($result);
     if(isset($row[0])) {
         print("<br>U bent ingelogd<br>");
+        $_SESSION["inlogstatus"] = True;
+        $_SESSION["WebCustomerID"] = $row[0];
         print("<meta http-equiv='refresh' content='1; url=\".\"' />");
     }
-    $_SESSION["inlogstatus"] = True;
 }

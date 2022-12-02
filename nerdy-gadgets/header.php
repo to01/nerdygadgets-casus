@@ -1,6 +1,9 @@
 <!-- de inhoud van dit bestand wordt bovenaan elke pagina geplaatst -->
 <?php
 session_start();
+if(empty($_SESSION['inlogstatus'])) {
+    $_SESSION['inlogstatus'] = False;
+}
 include "database.php";
 function countCart() {
     if (isset($_SESSION['cart'])) { //volledigheid van getCart() hier omdat je m anders 2 keer aanroept en glitches krijgt
@@ -79,7 +82,7 @@ $databaseConnection = connectToDatabase();
         <ul id="ul-class-navigation">
             <li><?php
                 if(isset($_SESSION["inlogstatus"])) {
-                    if($_SESSION["inlogstatus"] = True) {
+                    if($_SESSION["inlogstatus"] == True) {
                         print('<a href="InlogPagina.php" style="color: lawngreen" class="HrefDecoration"><i class="fas fa-user"></i>');
                     } else {
                         print('<a href="InlogPagina.php" class="HrefDecoration"><i class="fas fa-user"></i>');
