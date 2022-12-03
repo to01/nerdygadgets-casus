@@ -25,6 +25,23 @@ include "cartfuncties.php";
 </body>
 </html>
 
+<?php
+$query = "
+                SELECT ImagePath
+                FROM stockitemimages
+                WHERE StockItemID = ?";
+
+$statement = mysqli_prepare($connection, $query);
+mysqli_stmt_bind_param($statement, "i", $_GET["id"]);
+mysqli_stmt_execute($statement);
+$r = mysqli_stmt_get_result($statement);
+$r = mysqli_fetch_all($r, MYSQLI_ASSOC);
+
+if($r){
+    $images = $r;
+}
+?>
+
 <div id="CenteredContent">
     <?php
     if ($StockItem != null) {
@@ -41,20 +58,20 @@ include "cartfuncties.php";
 
         <div id="ArticleHeader">
             <?php
-            if (isset($StockItemImage)) {
+            if (isset($images)) {
                 // één plaatje laten zien
-                if (count($StockItemImage) == 1) {
+                if (count($images) == 1) {
                     ?>
                     <div id="ImageFrame"
-                         style="background-image: url('Public/StockItemIMG/<?php print $StockItemImage[0]['ImagePath']; ?>'); background-size: 300px; background-repeat: no-repeat; background-position: center;"></div>
+                         style="background-image: url('Public/StockItemIMG/<?php print $images[0]['ImagePath']; ?>'); background-size: 300px; background-repeat: no-repeat; background-position: center;"></div>
                     <?php
-                } else if (count($StockItemImage) >= 2) { ?>
+                } else if (count($images) >= 2) { ?>
                     <!-- meerdere plaatjes laten zien -->
                     <div id="ImageFrame">
                         <div id="ImageCarousel" class="carousel slide" data-interval="false">
                             <!-- Indicators -->
                             <ul class="carousel-indicators">
-                                <?php for ($i = 0; $i < count($StockItemImage); $i++) {
+                                <?php for ($i = 0; $i < count($images); $i++) {
                                     ?>
                                     <li data-target="#ImageCarousel"
                                         data-slide-to="<?php print $i ?>" <?php print (($i == 0) ? 'class="active"' : ''); ?>></li>
@@ -64,10 +81,10 @@ include "cartfuncties.php";
 
                             <!-- slideshow -->
                             <div class="carousel-inner">
-                                <?php for ($i = 0; $i < count($StockItemImage); $i++) {
+                                <?php for ($i = 0; $i < count($images); $i++) {
                                     ?>
                                     <div class="carousel-item <?php print ($i == 0) ? 'active' : ''; ?>">
-                                        <img src="Public/StockItemIMG/<?php print $StockItemImage[$i]['ImagePath'] ?>">
+                                        <img src="Public/StockItemIMG/<?php print $images[$i]['ImagePath'] ?>">
                                     </div>
                                 <?php } ?>
                             </div>
