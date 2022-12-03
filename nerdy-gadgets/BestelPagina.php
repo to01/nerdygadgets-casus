@@ -129,4 +129,17 @@ foreach($cart as $id => $hoeveelheid) {
     </body>
     </td>
 </form>
-            ");}
+            ");
+}
+
+if(isset($_POST["BestelSubmit"])){
+    $cart = getCart();
+    foreach($cart as $id => $hoeveelheid) {
+        $query = "
+                UPDATE stockitemholdings
+                SET QuantityOnHand = (QuantityOnHand - " . $hoeveelheid . ")  
+                WHERE StockItemID = " . $id;
+        if(mysqli_query($connection, $query)){
+        }
+    }
+}
