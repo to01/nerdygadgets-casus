@@ -139,7 +139,6 @@ if(isset($_POST["BestelSubmit"])){
                 UPDATE stockitemholdings
                 SET QuantityOnHand = (QuantityOnHand - " . $hoeveelheid . ")  
                 WHERE StockItemID = " . $id;
-        if(mysqli_query($connection, $query)){
-        }
+        $result = mysqli_query($connection, $query);
     }
 }
