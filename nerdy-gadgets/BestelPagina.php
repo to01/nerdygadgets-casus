@@ -140,5 +140,7 @@ if(isset($_POST["BestelSubmit"])){
                 SET QuantityOnHand = (QuantityOnHand - " . $hoeveelheid . ")  
                 WHERE StockItemID = " . $id;
         $result = mysqli_query($connection, $query);
+        deleteProductFromCart($id);
+        print("<meta http-equiv='refresh' content='0'>");
     }
 }
