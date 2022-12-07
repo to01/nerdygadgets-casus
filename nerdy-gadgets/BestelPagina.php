@@ -9,7 +9,7 @@ $port = 3306;
 $connection = mysqli_connect($host, $user, $pass, $databasename, $port);
 ?>
 <h1 class="TextMain" style="margin-left: 5px; margin-top: 5px">Bestellen </h1>
-<form method="post" action="https://www.ideal.nl/demo/qr/?app=ideal">
+<form method="post">
     <table>
         <script type="text/javascript">
             function ShowHideDiv() {
@@ -30,7 +30,7 @@ $connection = mysqli_connect($host, $user, $pass, $databasename, $port);
     <table style="margin-left: 35px">
         <tr> <!--bedrijfsnaam -->
             <td>* Bedrijfsnaam:</td>
-            <td><input style="height: 10%; background-color:#23232F; color: white; border-color:#676EFF" name="BedrijfsNaam" type="text" required></td>
+            <td><input style="height: 10%; background-color:#23232F; color: white; border-color:#676EFF" name="BedrijfsNaam" type="text" <script>if(ShowHideDiv == true){</script>required<script>}</script></td>
         </tr>
     </table>
     </div>
