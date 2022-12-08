@@ -3,6 +3,13 @@
 include __DIR__ . "/header.php";
 include "CartFuncties.php";
 
+$host = "localhost";
+$user = "root";
+$pass = ""; //eigen password invullen
+$databasename = "nerdygadgets";
+$port = 3306;
+$connection = mysqli_connect($host, $user, $pass, $databasename, $port);
+
 $ReturnableResult = null;
 $Sort = "SellPrice";
         $SortName = "price_low_high";
