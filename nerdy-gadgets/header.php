@@ -35,7 +35,7 @@ $databaseConnection = connectToDatabase();
     <link rel="stylesheet" href="Public/CSS/style.css" type="text/css">
     <link rel="stylesheet" href="Public/CSS/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="Public/CSS/typekit.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.1/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.2/css/all.css">
 </head>
 <body>
 <style>
@@ -83,7 +83,8 @@ $databaseConnection = connectToDatabase();
             <li><?php
                 if(isset($_SESSION["inlogstatus"])) {
                     if($_SESSION["inlogstatus"] == True) {
-                        print('<a href="InlogPagina.php" style="color: lawngreen" class="HrefDecoration"><i class="fas fa-user"></i>');
+                        print('<a href="InlogPagina.php" style="color: lawngreen" class="HrefDecoration"><i class="fas fa-user"></i>&nbsp&nbsp&nbsp&nbsp&nbsp');
+                        print('<a href="UitlogPagina.php" class="HrefDecoration"><i class="fa-solid fa-right-from-bracket"></i>');
                     } else {
                         print('<a href="InlogPagina.php" class="HrefDecoration"><i class="fas fa-user"></i>');
                     }

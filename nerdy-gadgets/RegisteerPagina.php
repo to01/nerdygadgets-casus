@@ -59,7 +59,14 @@ if(isset($_POST["Inlogsubmit"])) {
     $telnr = $_POST["phone"];
     $email = $_POST["E-mail"];
     $password = $_POST["wachtwoord"];
-    $query = "INSERT INTO webshopklant VALUES ((SELECT max(WebCustomerID)+1 FROM webshopklant w),\""."$naam"."\",\""."$land"."\",\""."$adres"."\",\""."$postcode"."\",'".$telnr."',\""."$email"."\",\""."$password"."\",1)";
+    $query = "SELECT CustomerEmail FROM webshopklant WHERE CustomerEmail = '" . $email . "'";
     $result = mysqli_query($connection, $query);
+    $row = mysqli_fetch_row($result);
+    if (isset($row[0])) {
+        print("<br><h5 style='color:red'> &nbsp Deze e-mail bestaat al </h5>");
+    } else {
+        $query = "INSERT INTO webshopklant VALUES ((SELECT max(WebCustomerID)+1 FROM webshopklant w),\"" . "$naam" . "\",\"" . "$land" . "\",\"" . "$adres" . "\",\"" . "$postcode" . "\",'" . $telnr . "',\"" . "$email" . "\",\"" . "$password" . "\",1)";
+        $result = mysqli_query($connection, $query);
+    }
 
 }
