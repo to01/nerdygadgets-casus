@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 11, 2022 at 04:47 PM
+-- Generation Time: Dec 11, 2022 at 05:06 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `nerdygadgets`
 --
+CREATE DATABASE IF NOT EXISTS `nerdygadgets` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `nerdygadgets`;
 
 -- --------------------------------------------------------
 
@@ -27,7 +29,6 @@ SET time_zone = "+00:00";
 -- Table structure for table `weborderlines`
 --
 
-DROP TABLE IF EXISTS `weborderlines`;
 CREATE TABLE `weborderlines` (
   `OrderLineID` int(11) NOT NULL,
   `WebOrderID` int(11) NOT NULL,
@@ -48,7 +49,6 @@ INSERT INTO `weborderlines` (`OrderLineID`, `WebOrderID`, `StockItemID`, `Quanti
 -- Table structure for table `webshopklant`
 --
 
-DROP TABLE IF EXISTS `webshopklant`;
 CREATE TABLE `webshopklant` (
   `WebCustomerID` int(11) NOT NULL,
   `CustomerName` varchar(45) NOT NULL,
@@ -74,7 +74,6 @@ INSERT INTO `webshopklant` (`WebCustomerID`, `CustomerName`, `CustomerCountry`, 
 -- Table structure for table `webshoporders`
 --
 
-DROP TABLE IF EXISTS `webshoporders`;
 CREATE TABLE `webshoporders` (
   `WebOrderID` int(11) NOT NULL,
   `WebCustomerID` int(11) NOT NULL,
@@ -97,13 +96,6 @@ INSERT INTO `webshoporders` (`WebOrderID`, `WebCustomerID`, `OrderDate`, `OrderI
 --
 
 --
--- Indexes for table `weborderlines`
---
-ALTER TABLE `weborderlines`
-  ADD PRIMARY KEY (`OrderLineID`),
-  ADD KEY `fk_WebOrderLines_WebshopOrders1_idx` (`WebOrderID`);
-
---
 -- Indexes for table `webshopklant`
 --
 ALTER TABLE `webshopklant`
@@ -119,12 +111,6 @@ ALTER TABLE `webshoporders`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `weborderlines`
---
-ALTER TABLE `weborderlines`
-  ADD CONSTRAINT `fk_WebOrderLines_WebshopOrders1` FOREIGN KEY (`WebOrderID`) REFERENCES `webshoporders` (`WebOrderID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `webshoporders`
