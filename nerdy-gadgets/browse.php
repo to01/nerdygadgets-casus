@@ -3,13 +3,6 @@
 include __DIR__ . "/header.php";
 include "CartFuncties.php";
 
-$host = "localhost";
-$user = "root";
-$pass = ""; //eigen password invullen
-$databasename = "nerdygadgets";
-$port = 3306;
-$connection = mysqli_connect($host, $user, $pass, $databasename, $port);
-
 $ReturnableResult = null;
 $Sort = "SellPrice";
         $SortName = "price_low_high";
@@ -293,21 +286,9 @@ if (isset($amount)) {
                     </form>
                     <?php
                     if(isset($_POST["submit".$row["StockItemID"]])) {
-                        $stockItemID = $row["StockItemID"];
-                        $query = "SELECT QuantityOnHand FROM stockitemholdings WHERE StockItemID = " . $stockItemID;
-                        $result = mysqli_query($connection, $query);
-                        $row = mysqli_fetch_array($result);
-                        $hoeveelheid = $row[0];
-                        $cart = getCart();
-                        if(empty($cart["$stockItemID"])){
-                            $cart["$stockItemID"] = 0;
-                        }
-                        if (($stockItemID + $cart["$stockItemID"]) > $hoeveelheid) {
-                            print("<p style='color: white'>De gevraagde hoeveelheid ligt boven de voorraad!</p>");
-                        } else {
-                            addProductToCart($stockItemID);
-                            print("<p style='color: white'>Product toegevoegd</p>");
-                        }
+                        addProductToCart($row["StockItemID"]);
+                        print("<p style='color: white'>Product toegevoegd</p>");
+                        print("<meta http-equiv='refresh' content='1'>");
                     }
                     ?>
                     <h4 class="ItemQuantity"><?php print getVoorraadTekst($row["QuantityOnHand"]); ?></h4>

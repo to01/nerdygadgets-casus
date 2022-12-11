@@ -85,8 +85,7 @@ foreach($cart as $id => $hoeveelheid) {
         deleteProductFromCart($id);
         print("<meta http-equiv='refresh' content='0'>");
     } elseif (isset($_POST["submit".$id])) {              // zelfafhandelend formulier
-        if($_POST["amount".$id] <= 0) {
-        } else {
+        if(!($_POST["amount".$id] <= 0)) {
             setProductAmount($id, $_POST["amount" . $id]);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
         }
         print("<meta http-equiv='refresh' content='0'>");
