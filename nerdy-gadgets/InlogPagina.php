@@ -31,6 +31,9 @@ $connection = mysqli_connect($host, $user, $pass, $databasename, $port);
     </table>
 </form>
 <a href="RegistreerPagina.php" style="color:#3366CC;" class="HrefDecoration"> <u> Geen account? Klik hier </u> </a>
+<br>
+<br>
+<a href="changeaddress.php" style="color:#3366CC;" class="HrefDecoration"> <u> Accountgegevens aanpassen? Klik hier (inlog vereist)</u> </a>
 <?php
 if(isset($_POST["InlogSubmit"])) {
     $email = $_POST["E-mail"];
