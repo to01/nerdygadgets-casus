@@ -30,7 +30,7 @@ $connection = mysqli_connect($host, $user, $pass, $databasename, $port);
         </tr>
     </table>
 </form>
-<a href="RegisteerPagina.php" style="color:#3366CC;" class="HrefDecoration"> <u> Geen account? Klik hier </u> </a>
+<a href="RegistreerPagina.php" style="color:#3366CC;" class="HrefDecoration"> <u> Geen account? Klik hier </u> </a>
 <?php
 if(isset($_POST["InlogSubmit"])) {
     $email = $_POST["E-mail"];

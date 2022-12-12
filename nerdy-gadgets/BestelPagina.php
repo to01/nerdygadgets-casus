@@ -15,6 +15,7 @@ $land = ' value="NAN">Kies een land';
 $adres = "";
 $postcode = "";
 $telefoonnummer = "";
+$telefooncode = "";
 $status = "";
 $iso_array = isocodes();
 if(isset($_SESSION["WebCustomerID"])) {
