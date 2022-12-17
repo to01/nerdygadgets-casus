@@ -274,8 +274,30 @@ if (isset($amount)) {
 
                     <div id="StockItemFrameRight">
                         <div class="CenterPriceLeftChild">
+                            <?php
+                            $query = "SELECT Korting FROM Aanbevolen WHERE StockItemID = " . $row["StockItemID"];
+                            $result = mysqli_query($connection, $query);
+                            $array = mysqli_fetch_array($result);
+                            if(empty($array)){
+                            ?>
                             <h1 class="StockItemPriceText"><?php print sprintf("€ %0.2f", berekenVerkoopPrijs($row["RecommendedRetailPrice"], $row["TaxRate"])); ?></h1>
                             <h6>Inclusief BTW </h6>
+                            <?php
+                            } else {
+                                $korting = $array[0];
+                                if(empty($korting)){
+                                    $korting = 0;
+                                } else {
+                                    $korting1 = (berekenVerkoopPrijs($row["RecommendedRetailPrice"], $row["TaxRate"])) * ($korting / 100);
+                                    $prijs1 = (berekenVerkoopPrijs($row["RecommendedRetailPrice"], $row["TaxRate"])) - $korting1;
+                                ?>
+                                    <h1 class="StockItemPriceText"><?php print sprintf("€ %0.2f", $prijs1); ?></h1>
+                                    <h6>Inclusief BTW </h6>
+                                    <p class="nobreak" style="color: gold; font-size: xx-large">Aanbieding!</p>
+                                <?php
+                                }
+                            }
+                            ?>
                         </div>
                     </div>
                     <h1 class="StockItemID">Artikelnummer: <?php print $row["StockItemID"]; ?></h1>

@@ -517,5 +517,13 @@ ul#ul-class-price li {
     width:500px;
     background-color:#23232F;
     color:#676EFF;
-    border-color:#676EFF
+    border-color:#676EFF;
+}
+
+.Aanbiedingen {
+    font-family: pt-sans, sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 40px !important;
+
 }
