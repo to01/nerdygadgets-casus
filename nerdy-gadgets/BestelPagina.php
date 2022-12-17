@@ -47,8 +47,8 @@ $cart = getCart();
         </table>
         <table>
             <tr> <!--Land -->
-                <td><div style="text-align: right; width: 140px">* Land:</div></td>
-                <td><select name="Land" style="height: 7%; width: 55%;background-color:#23232F; color: white; border-color:#676EFF">
+                <td><div name="Land" style="text-align: right; width: 140px">* Land:</div></td>
+                <td><select style="height: 7%; width: 55%;background-color:#23232F; color: white; border-color:#676EFF">
                         <option value="NLD">Netherlands</option>
                         <option value="AFG">Afghanistan</option>
                         <option value="ALA">Åland Islands</option>

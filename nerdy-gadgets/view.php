@@ -113,6 +113,19 @@ if($r){
                 <?php print $StockItem['StockItemName']; ?>
             </h2>
             <div class="QuantityText"><?php print $StockItem['QuantityOnHand']; ?></div>
+            <input style="background-color:#23232F; color: white; border-color:#676EFF; width: 50px; height: 30px; margin-top: 130px" type="button" value="Live" onclick="window.location.reload()">
+            <div id="refresh_me" >
+                <?php
+                if (isset($_GET["id"])) {
+                $stockItemID = $_GET["id"];
+                    if($stockItemID>= 220){
+                        $query = "SELECT Temperature, ValidFrom FROM coldroomtemperatures WHERE ColdRoomSensorNumber = 5";
+                        $result = mysqli_query($connection, $query);
+                        $row = mysqli_fetch_array($result);
+                        print ("Temperatuur Magazijn: ") . $row["Temperature"]."˚C <br>";
+                        print ("Tijd van meting: ") . $row["ValidFrom"];
+                }}?>
+            </div>
             <div id="StockItemHeaderLeft">
                 <div class="CenterPriceLeft">
                     <div class="CenterPriceLeftChild">
@@ -153,18 +166,21 @@ if($r){
                                 $stockItemID = $_POST["stockItemID"];
                                 if ($_POST["amount"] >= 1 && $_POST["amount"] == number_format($_POST["amount"], 0, ',', '.')) {
                                     $_POST["amount"] = rtrim(rtrim(number_format($_POST["amount"], '0')));
-                                    addProductAmountToCart($stockItemID, $_POST["amount"]);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
+                                    addProductAmountToCart($stockItemID, $_POST["amount"]);// maak gebruik van geïmporteerde functie uit cartfuncties.php
                                     print("Product toegevoegd");
-                                    print("<a href='cart.php'> Winkelmand bekijken</a>");
+                                    print("<meta http-equiv='refresh'  content='0'>");
                                 } elseif ($_POST["amount"] >= 1) {
                                     addProductAmountToCart($stockItemID, $_POST["amount"]);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
                                     print("Product toegevoegd");
-                                    print("<a href='cart.php'> Winkelmand bekijken</a>");
+                                    print("<meta http-equiv='refresh'  content='0'>");
                                 } else {
                                     print("Voer een geldig cijfer in!");
                                 }
                             }
+
                         }
+                        print("<a href='cart.php'> Winkelmand bekijken</a>");
+
                         ?>
                     </div>
                 </div>
@@ -183,7 +199,7 @@ if($r){
                 <table>
                 <thead>
                 <th>Naam:</th>
-                <th>Data:</th>
+                <th>Data: </th>
                 </thead>
                 <?php
                 foreach ($CustomFields as $SpecName => $SpecText) { ?>

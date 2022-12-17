@@ -93,7 +93,7 @@ $databaseConnection = connectToDatabase();
                 }
                 ?>
                     &nbsp
-                    <a href="cart.php"><i class="fa badge fa-lg" value="<?php print(countCart());?>" style="color: #FFFFFF">&#xf07a;</i></a>
+                    <a href="cart.php"><i class="fa badge fa-lg" value="<?php print(countCart());?>" onload="" style="color: #FFFFFF">&#xf07a;</i></a>
                 &nbsp&nbsp&nbsp
                         <a href="browse.php" class="HrefDecoration"><i class="fas fa-search search"></i> Zoeken </a>
             </li>
