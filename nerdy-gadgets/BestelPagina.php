@@ -36,6 +36,8 @@ if(isset($_SESSION["WebCustomerID"])) {
     $loginland = $row[2];
     $loginadres = $row[3];
     $loginpostcode = $row[4];
+    $marketingemail = $row[6];
+    $customername = $row[1];
 }
 ?>
     <h1 class="TextMain" style="margin-left: 5px; margin-top: 5px">Bestellen </h1>
@@ -172,11 +174,12 @@ if(isset($_POST["BestelSubmit"])) { // if submit is pressed
             $query = "INSERT INTO weborderlines VALUES ((SELECT MAX(OrderLineID)+1 FROM weborderlines w),".$orderid.",".$id.",".$hoeveelheid.")";
             $result = mysqli_query($connection, $query);
         }
+        }
         print("<script> 
         window.onload = function(){
         window.open('https://www.ideal.nl/demo/qr/?app=ideal', '_blank'); // will open new tab on window.onload
         }
-        </script><meta http-equiv='refresh' content='1; url=.'>");}
+        </script><meta http-equiv='refresh' content='1; url=.'>");
     }
 }}
 ?>
@@ -249,16 +252,67 @@ foreach($cart as $id => $hoeveelheid) {
 </table>
             ");
 }
-
+if(empty($customername)) {
+    $customername = $naam;
+}
+if(empty($marketingemail)) {
+    $marketingemail = $email;
+}
+$message = "
+        <body>
+            <p>Geachte $customername<br><br>Uw bestelling is aangekomen,<br>hieronder staat een overzicht van uw bestelling</p><br>
+            <table style='width: 1000px'>
+            <tr style='text-align:left;'>
+               <th>Artikelnummer</th><th>Productnaam</th><th>Aantal</th><th>Prijs/stuk</th><th>Subtotaal</th>
+            </tr><br>
+            ";
+$totaalprijs=0;
 if(isset($_POST["BestelSubmit"])){
-    $cart = getCart();
     foreach($cart as $id => $hoeveelheid) {
+        // Multiple recipients
+        $to = $marketingemail; // note the comma
+        // Subject
+        $subject = 'Bestelling NerdyGadgets';
+        // Message
+        $query = "SELECT StockItemName FROM stockitems WHERE StockItemID = ".$id;
+        $result = mysqli_query($connection, $query);
+        $row = mysqli_fetch_row($result);
+        $name = $row[0];
+        $query = "SELECT (RecommendedRetailPrice * (1+(TaxRate/100))) FROM stockitems WHERE StockItemID = " . $id;
+        $result = mysqli_query($connection, $query);
+        $row = mysqli_fetch_row($result);
+        $prijs = $row[0];
+        $prijs1 = $prijs * $hoeveelheid;
+        $totaalprijs += $prijs1;
+        $message .= "
+            <tr>
+               <td class='CartId nobreak'>".$id."</td><td>$name</td><td>$hoeveelheid</td><td class='CartId'>" . sprintf("€ %.2f", $prijs) . "</td><td class='StockItemPriceText'>" . sprintf("€ %.2f", $prijs1) . "</td>
+            </tr>
+        ";
+        // To send HTML mail, the Content-type header must be set
         $query = "
                 UPDATE stockitemholdings
                 SET QuantityOnHand = (QuantityOnHand - " . $hoeveelheid . ")  
                 WHERE StockItemID = " . $id;
         $result = mysqli_query($connection, $query);
         deleteProductFromCart($id);
-        print("<meta http-equiv='refresh' content='0; url=.'>");
     }
+    $query = "SELECT MAX(WebOrderID) FROM webshoporders";
+    $result = mysqli_query($connection, $query);
+    $row = mysqli_fetch_row($result);
+    $ordernummer = $row[0];
+    $message .= "
+                <br><br>
+                <tr>
+                    <td>Ordernummer: $ordernummer</td><td> </td><td> </td><td> </td> <td class='StockItemPriceText'>Totaal: " . sprintf("€ %.2f", $totaalprijs) . "</td></td>
+                </tr>
+            </table>
+            <br><br><p>Met vriendelijke groeten,<br>NerdyGadgets<br>---------------------------<br>+31 0612345678<br>NerdyGadgets@gmail.com<br></p>
+        </body>";
+    $headers[] = 'MIME-Version: 1.0';
+    $headers[] = 'Content-type: text/html; charset=iso-8859-1';
+    // Mail it
+    mail($to, $subject, $message, implode("\r\n", $headers));
+
+    print("<meta http-equiv='refresh' content='0; url=.'>");
 }
