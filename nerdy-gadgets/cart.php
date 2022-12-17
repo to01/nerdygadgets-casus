@@ -95,7 +95,7 @@ foreach($cart as $id => $hoeveelheid) {
     ");
 }
 print("</table><br>");
-print("<h5 class='StockItemPriceText'>" . "Totaalprijs: " . sprintf("€ %.2f", $totaalprijs) . "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" . "<a href='BestelPagina.php' class='HrefDecoration' style='color:#676EFF'><button class='bestellen'>Verder Naar Bestellen</button></a>" . "</h5>");
+print("<h5 class='StockItemPriceText'>" . "Totaalprijs: " . sprintf("€ %.2f", $totaalprijs) . "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" . "<a href='CartBewaren.php' class='HrefDecoration' style='color:#676EFF'> <button class='bewaren'>Winkelmand bewaren </button> </a>" . "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" . "<a href='BestelPagina.php' class='HrefDecoration' style='color:#676EFF'><button class='bestellen'>Verder Naar Bestellen</button></a>" . "</h5>");
 ?>
 </body>
 </html>
