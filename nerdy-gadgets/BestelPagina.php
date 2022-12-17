@@ -330,32 +330,71 @@ $cart = getCart();
 date_default_timezone_set('Europe/Amsterdam');
 if(empty($cart)) {print("<h1 style='color: red'>Uw winkelwagen is nog leeg!</h1>");} // checkt of de winkelwagen leeg is en als dit het geval is print het text uit en stopt het je van bestellen
 else {
-if(isset($_POST["BestelSubmit"])) { // if submit is pressed
-    if ($_SESSION["inlogstatus"] == True) { // if logged in
-        $id = $_SESSION["WebCustomerID"];
-        $query = "SELECT * FROM webshopklant WHERE WebCustomerID = ".$id; // select all customer data
-        $result = mysqli_query($connection, $query);
-        $row = mysqli_fetch_row($result);
-        $sqlemail = $row[6]; // email belonging to customerID
-        if($sqlemail == $_POST["E-mail"]) { // if the email which was input is the same as the email belonging to the customer ID
-            $date = date("Y-m-d"); // sets date in the format of MYSQL
-            $business = $_POST["besteller"]; // checks if customer is a business or a person
-            $query = "INSERT INTO webshoporders VALUES ((SELECT max(WebOrderID)+1 FROM webshoporders w)," . $id . ",'" . $date . "'," . $business . ")"; // creates new order for customer
-            $result = mysqli_query($connection, $query);
-            $query = "SELECT MAX(weborderid) FROM webshoporders"; // gets orderid to fill orderlines later
+    if(isset($_POST["BestelSubmit"])) { // if submit is pressed
+        if ($_SESSION["inlogstatus"] == True) { // if logged in
+            $id = $_SESSION["WebCustomerID"];
+            $query = "SELECT * FROM webshopklant WHERE WebCustomerID = ".$id; // select all customer data
             $result = mysqli_query($connection, $query);
             $row = mysqli_fetch_row($result);
-            $orderid = $row[0];
-            foreach($cart as $id => $hoeveelheid) {
-                $query = "INSERT INTO weborderlines VALUES ((SELECT MAX(OrderLineID)+1 FROM weborderlines w),".$orderid.",".$id.",".$hoeveelheid.")";
+            $sqlemail = $row[6]; // email belonging to customerID
+            if($sqlemail == $_POST["E-mail"]) { // if the email which was input is the same as the email belonging to the customer ID
+                $date = date("Y-m-d"); // sets date in the format of MYSQL
+                $business = $_POST["besteller"]; // checks if customer is a business or a person
+                $query = "INSERT INTO webshoporders VALUES ((SELECT max(WebOrderID)+1 FROM webshoporders w)," . $id . ",'" . $date . "'," . $business . ")"; // creates new order for customer
                 $result = mysqli_query($connection, $query);
-            }
-            print("<script> 
+                $query = "SELECT MAX(weborderid) FROM webshoporders"; // gets orderid to fill orderlines later
+                $result = mysqli_query($connection, $query);
+                $row = mysqli_fetch_row($result);
+                $orderid = $row[0];
+                foreach($cart as $id => $hoeveelheid) {
+                    $query = "INSERT INTO weborderlines VALUES ((SELECT MAX(OrderLineID)+1 FROM weborderlines w),".$orderid.",".$id.",".$hoeveelheid.")";
+                    $result = mysqli_query($connection, $query);
+                }
+                print("<script> 
             window.onload = function(){
             window.open('https://www.ideal.nl/demo/qr/?app=ideal', '_blank'); // will open new tab on window.onload
             }
             </script><meta http-equiv='refresh' content='1; url=.'>"); // javascript to open payment page in new tab
-        } else { // if a different email is entered then the one belonging to the customerID of the account
+            } else { // if a different email is entered then the one belonging to the customerID of the account
+                // maakt nieuwe klant aan
+                $naam = $_POST["BestelNaam"];
+                $email = $_POST["E-mail"];
+                $land = $_POST["Land"];
+                $adres = $_POST["BestelAdres"];
+                $postcode = $_POST["BestelPostcode"];
+                $tel = $_POST["phonecode"].$_POST["phone"];
+                $query = "SELECT CustomerEmail FROM webshopklant WHERE CustomerEmail = '" . $email . "' AND isloggable = 1"; // check if there is already an account for the input email
+                $result = mysqli_query($connection, $query);
+                $row = mysqli_fetch_row($result);
+                if (isset($row[0])) { // if there is already an account for the input email
+                    print("<br><h5 style='color:red'> &nbsp Deze e-mail heeft al een account!</h5>"); // give back message and don't let customer check out
+                } else { // if there is no account for the input email
+                    $query = "INSERT INTO webshopklant (CustomerName, CustomerCountry, CustomerAddress, CustomerPostalcode, CustomerTelNr, CustomerEmail, CustomerPassword, isloggable) VALUES ('".$naam."','".$land."','".$adres."','".$postcode."','".$tel."','".$email."',0,0)"; // create new customer (not account because you can't log into it)
+                    $result = mysqli_query($connection, $query);
+                    // haalt ID van nieuwe klant op
+                    $query = "SELECT WebCustomerID FROM webshopklant WHERE WebCustomerID = (SELECT MAX(WebCustomerID) FROM webshopklant w)"; // this might not work amazing, but it's the best I've got
+                    $result = mysqli_query($connection, $query);
+                    $row = mysqli_fetch_row($result);
+                    $id = $row[0];
+                    $date = date("Y-m-d"); // sets date in the format of MYSQL
+                    $business = $_POST["besteller"]; // checks if customer is a business or a person
+                    $query = "INSERT INTO webshoporders (WebOrderID, StockItemID, Quantity) VALUES ((" . $id . ",'" . $date . "'," . $business . ")"; // creates new order for customer
+                    $result = mysqli_query($connection, $query);
+                    $query = "SELECT MAX(weborderid) FROM webshoporders"; // gets orderid to fill orderlines later
+                    $result = mysqli_query($connection, $query);
+                    $row = mysqli_fetch_row($result);
+                    $orderid = $row[0];
+                    foreach($cart as $id => $hoeveelheid) {
+                        $query = "INSERT INTO weborderlines VALUES ((SELECT MAX(OrderLineID)+1 FROM weborderlines w),".$orderid.",".$id.",".$hoeveelheid.")";
+                        $result = mysqli_query($connection, $query);
+                    }
+                    print("<script> 
+            window.onload = function(){
+            window.open('https://www.ideal.nl/demo/qr/?app=ideal', '_blank'); // will open new tab on window.onload
+            }
+            </script><meta http-equiv='refresh' content='1; url=.'>");} // javascript to open payment page in new tab
+            }
+        } else { // if not logged in | i'm not commenting here because all has already been written in previous areas
             // maakt nieuwe klant aan
             $naam = $_POST["BestelNaam"];
             $email = $_POST["E-mail"];
@@ -363,79 +402,40 @@ if(isset($_POST["BestelSubmit"])) { // if submit is pressed
             $adres = $_POST["BestelAdres"];
             $postcode = $_POST["BestelPostcode"];
             $tel = $_POST["phonecode"].$_POST["phone"];
-            $query = "SELECT CustomerEmail FROM webshopklant WHERE CustomerEmail = '" . $email . "' AND isloggable = 1"; // check if there is already an account for the input email
+            $query = "SELECT CustomerEmail FROM webshopklant WHERE CustomerEmail = '" . $email . "' AND isloggable = 1";
             $result = mysqli_query($connection, $query);
             $row = mysqli_fetch_row($result);
-            if (isset($row[0])) { // if there is already an account for the input email
-                print("<br><h5 style='color:red'> &nbsp Deze e-mail heeft al een account!</h5>"); // give back message and don't let customer check out
-            } else { // if there is no account for the input email
-            $query = "INSERT INTO webshopklant VALUES ((SELECT max(WebCustomerID)+1 FROM webshopklant w),'".$naam."','".$land."','".$adres."','".$postcode."','".$tel."','".$email."',0,0)"; // create new customer (not account because you can't log into it)
-            $result = mysqli_query($connection, $query);
-            // haalt ID van nieuwe klant op
-            $query = "SELECT WebCustomerID FROM webshopklant WHERE WebCustomerID = (SELECT MAX(WebCustomerID) FROM webshopklant w)"; // this might not work amazing, but it's the best I've got
-            $result = mysqli_query($connection, $query);
-            $row = mysqli_fetch_row($result);
-            $id = $row[0];
-            $date = date("Y-m-d"); // sets date in the format of MYSQL
-            $business = $_POST["besteller"]; // checks if customer is a business or a person
-            $query = "INSERT INTO webshoporders VALUES ((SELECT max(WebOrderID)+1 FROM webshoporders w)," . $id . ",'" . $date . "'," . $business . ")"; // creates new order for customer
-            $result = mysqli_query($connection, $query);
-            $query = "SELECT MAX(weborderid) FROM webshoporders"; // gets orderid to fill orderlines later
-            $result = mysqli_query($connection, $query);
-            $row = mysqli_fetch_row($result);
-            $orderid = $row[0];
-            foreach($cart as $id => $hoeveelheid) {
-                $query = "INSERT INTO weborderlines VALUES ((SELECT MAX(OrderLineID)+1 FROM weborderlines w),".$orderid.",".$id.",".$hoeveelheid.")";
+            if (isset($row[0])) {
+                print("<br><h5 style='color:red'> &nbsp Deze e-mail heeft al een account!</h5>");
+            } else {
+                $query = "INSERT INTO webshopklant (CustomerName, CustomerCountry, CustomerAddress, CustomerPostalcode, CustomerTelNr, CustomerEmail, CustomerPassword, isloggable) VALUES ('".$naam."','".$land."','".$adres."','".$postcode."','".$tel."','".$email."',0,0)";
                 $result = mysqli_query($connection, $query);
-            }
-            print("<script> 
-            window.onload = function(){
-            window.open('https://www.ideal.nl/demo/qr/?app=ideal', '_blank'); // will open new tab on window.onload
-            }
-            </script><meta http-equiv='refresh' content='1; url=.'>");} // javascript to open payment page in new tab
-        }
-    } else { // if not logged in | i'm not commenting here because all has already been written in previous areas
-        // maakt nieuwe klant aan
-        $naam = $_POST["BestelNaam"];
-        $email = $_POST["E-mail"];
-        $land = $_POST["Land"];
-        $adres = $_POST["BestelAdres"];
-        $postcode = $_POST["BestelPostcode"];
-        $tel = $_POST["phonecode"].$_POST["phone"];
-        $query = "SELECT CustomerEmail FROM webshopklant WHERE CustomerEmail = '" . $email . "' AND isloggable = 1";
-        $result = mysqli_query($connection, $query);
-        $row = mysqli_fetch_row($result);
-        if (isset($row[0])) {
-            print("<br><h5 style='color:red'> &nbsp Deze e-mail heeft al een account!</h5>");
-        } else {
-        $query = "INSERT INTO webshopklant VALUES ((SELECT max(WebCustomerID)+1 FROM webshopklant w),'".$naam."','".$land."','".$adres."','".$postcode."','".$tel."','".$email."',0,0)";
-        $result = mysqli_query($connection, $query);
-        // haalt ID van nieuwe klant op
-        $query = "SELECT WebCustomerID FROM webshopklant WHERE WebCustomerID = (SELECT MAX(WebCustomerID) FROM webshopklant w)";
-        $result = mysqli_query($connection, $query);
-        $row = mysqli_fetch_row($result);
-        $id = $row[0];
-        $date = date("Y-m-d");
-        $business = $_POST["besteller"];
-        $query = "INSERT INTO webshoporders VALUES ((SELECT max(WebOrderID)+1 FROM webshoporders w)," . $id . ",'" . $date . "'," . $business . ")";
-        $result = mysqli_query($connection, $query);
-        $query = "SELECT MAX(weborderid) FROM webshoporders"; // gets orderid to fill orderlines later
-        $result = mysqli_query($connection, $query);
-        $row = mysqli_fetch_row($result);
-        $orderid = $row[0];
-        foreach($cart as $id => $hoeveelheid) {
-            $query = "INSERT INTO weborderlines VALUES ((SELECT MAX(OrderLineID)+1 FROM weborderlines w),".$orderid.",".$id.",".$hoeveelheid.")";
-            $result = mysqli_query($connection, $query);
-        }
-        print("<script> 
+                // haalt ID van nieuwe klant op
+                $query = "SELECT WebCustomerID FROM webshopklant WHERE WebCustomerID = (SELECT MAX(WebCustomerID) FROM webshopklant w)";
+                $result = mysqli_query($connection, $query);
+                $row = mysqli_fetch_row($result);
+                $id = $row[0];
+                $date = date("Y-m-d");
+                $business = $_POST["besteller"];
+                $query = "INSERT INTO webshoporders (WebCustomerID, OrderDate, OrderIsBusiness) VALUES (" . $id . ",'" . $date . "'," . $business . ")";
+                $result = mysqli_query($connection, $query);
+                $query = "SELECT MAX(weborderid) FROM webshoporders"; // gets orderid to fill orderlines later
+                $result = mysqli_query($connection, $query);
+                $row = mysqli_fetch_row($result);
+                $orderid = $row[0];
+                foreach($cart as $id => $hoeveelheid) {
+                    $query = "INSERT INTO weborderlines VALUES ((SELECT MAX(OrderLineID)+1 FROM weborderlines w),".$orderid.",".$id.",".$hoeveelheid.")";
+                    $result = mysqli_query($connection, $query);
+                }
+                print("<script> 
         window.onload = function(){
         window.open('https://www.ideal.nl/demo/qr/?app=ideal', '_blank'); // will open new tab on window.onload
         }
         </script><meta http-equiv='refresh' content='1; url=.'>");}
-    }
-}}
+        }
+    }}
 ?>
-<br>
+    <br>
     <!DOCTYPE html>
     <html lang="nl">
     <head>
@@ -474,35 +474,62 @@ foreach($cart as $id => $hoeveelheid) {
     $result = mysqli_query($connection, $query);
     $row = mysqli_fetch_row($result);
     $name = $row[0];
+
+    $query = "SELECT Korting FROM Aanbevolen WHERE StockItemID = " . $id;
+    $result = mysqli_query($connection, $query);
+    $row = mysqli_fetch_array($result);
+    if(empty($row)){
+        $korting = "";
+    } else {
+        $korting = $row[0];
+    }
+
     $query = "SELECT (RecommendedRetailPrice * (1+(TaxRate/100))) FROM stockitems WHERE StockItemID = " . $id;
     $result = mysqli_query($connection, $query);
     $row = mysqli_fetch_row($result);
     $prijs = $row[0];
-    $prijs1 = $prijs * $hoeveelheid;
-    $totaalprijs += $prijs1;
-    print("
-<td style='width:40%'>
-    <a class='CartName' href='view.php?id=".$id."'>".$name."</a>
-    <!--    <h3 class='CartAmount'>hoeveelheid: ".$hoeveelheid."</h3>-->
-    <br>
-    <h2 class='CartId nobreak'>Artikelnummer: ".$id."</h2>
-</td>
-<form method='post'>
-    <td style='width:10%'>
-        <h3> Aantal: $hoeveelheid </h3>
+
+    if(empty($korting)){
+        $prijs1 = $prijs * $hoeveelheid;
+        $totaalprijs += $prijs1;
+    } else {
+        $korting1 = $prijs * ($korting / 100);
+        $prijs0 = $prijs - $korting1;
+        $prijs1 = $prijs0 * $hoeveelheid;
+        $totaalprijs += $prijs0;
+        $prijs = $prijs - $korting1;
+    }
+    ?>
+    <td style='width:40%'>
+        <a class='CartName' href='view.php?id=<?php ".$id." ?>'> <?php print($name) ?></a>
+        <!--    <h3 class='CartAmount'>hoeveelheid: ".$hoeveelheid."</h3>-->
+        <br>
+        <h2 class='CartId nobreak'>Artikelnummer: <?php print($id) ?></h2>
     </td>
-    <td>
-        <h4 class='StockItemPriceText'>" . sprintf("€ %.2f", $prijs1) . "</h4>
-        <h4 class='CartId'>" . sprintf("€ %.2f", $prijs) . " per stuk</h4>
-        <h4 style='font-size: 1rem'>Inclusief BTW</h4>
+    <form method='post'>
+        <td style='width:10%'>
+            <h3> Aantal: <?php print($hoeveelheid) ?></h3>
         </td>
-            <body>
-    <hr style='background-color: #676EFF'>
-    </body>
-    </td>
-</form>
-</table>
-            ");
+        <td>
+            <h4 class='StockItemPriceText'> <?php print(sprintf("€ %.2f", $prijs1)) ?></h4>
+            <h4 class='CartId'> <?php print(sprintf("€ %.2f", $prijs)) ?> per stuk</h4>
+            <h4 style='font-size: 1rem'>Inclusief BTW</h4>
+        </td>
+        <?php
+        if($korting != ""){
+        ?>
+        <td>
+            <h5 style="color: gold">Korting: <?php print($korting)?>%</h5>
+        </td>
+            <?php
+        }
+            ?>
+        <body>
+        <hr style='background-color: #676EFF'>
+        </body>
+    </form>
+    </table>
+    <?php
 }
 
 if(isset($_POST["BestelSubmit"])){
@@ -517,3 +544,4 @@ if(isset($_POST["BestelSubmit"])){
         print("<meta http-equiv='refresh' content='0'>");
     }
 }
+?>

@@ -82,6 +82,17 @@ $databaseConnection = connectToDatabase();
         <ul id="ul-class-navigation">
             <li><?php
                 if(isset($_SESSION["inlogstatus"])) {
+                    $email = $_POST["E-mail"];
+                    $query = "SELECT isAdmin FROM webshopklant WHERE CustomerEmail = " . $email;
+                    $result = mysqli_query($databaseConnection, $query);
+                    $row = mysqli_fetch_array($result);
+                    if(empty($row)){
+                    } else {
+                        $isAdmin = $row;
+                        if($isAdmin == 1){
+                            print('<a href="Admin.php"><i class="fas fa-cogs"></i> Admin </a> &nbsp &nbsp &nbsp &nbsp');
+                        }
+                    }
                     if($_SESSION["inlogstatus"] == True) {
                         print('<a href="InlogPagina.php" style="color: lawngreen" class="HrefDecoration"><i class="fas fa-user"></i>&nbsp&nbsp&nbsp&nbsp&nbsp');
                         print('<a href="UitlogPagina.php" class="HrefDecoration"><i class="fa-solid fa-right-from-bracket"></i>');
@@ -92,13 +103,12 @@ $databaseConnection = connectToDatabase();
                     print('<a href="InlogPagina.php" class="HrefDecoration"><i class="fas fa-user"></i>');
                 }
                 ?>
-                    &nbsp
-                    <a href="cart.php"><i class="fa badge fa-lg" value="<?php print(countCart());?>" style="color: #FFFFFF">&#xf07a;</i></a>
+                &nbsp
+                <a href="cart.php"><i class="fa badge fa-lg" value="<?php print(countCart());?>" style="color: #FFFFFF">&#xf07a;</i></a>
                 &nbsp&nbsp&nbsp
-                        <a href="browse.php" class="HrefDecoration"><i class="fas fa-search search"></i> Zoeken </a>
+                <a href="browse.php" class="HrefDecoration"><i class="fas fa-search search"></i> Zoeken </a>
             </li>
         </ul>
-
         <!-- einde code voor US3 zoeken -->
     </div>
     <div class="row" id="Content">

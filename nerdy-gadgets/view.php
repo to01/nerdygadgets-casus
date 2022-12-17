@@ -1,6 +1,10 @@
 <!-- dit bestand bevat alle code voor de pagina die één product laat zien -->
 <?php
 include __DIR__ . "/header.php";
+include_once "database.php";
+$databaseConnection = connectToDatabase();
+$StockItem = getStockItem($_GET['id'], $databaseConnection);
+$StockItemImage = getStockItemImage($_GET['id'], $databaseConnection);
 $host = "localhost";
 $user = "root";
 $pass = ""; //eigen password invullen
@@ -8,8 +12,6 @@ $databasename = "nerdygadgets";
 $port = 3306;
 $connection = mysqli_connect($host, $user, $pass, $databasename, $port);
 
-$StockItem = getStockItem($_GET['id'], $databaseConnection);
-$StockItemImage = getStockItemImage($_GET['id'], $databaseConnection);
 ?>
 
 <?php
@@ -118,9 +120,35 @@ if($r){
                     <div class="CenterPriceLeftChild">
                         <br>
                         <br>
-                        <p class="StockItemPriceText"><b><?php print sprintf("€ %.2f", $StockItem['SellPrice']); ?></b></p>
-                        <h6 class="nobreak"> Inclusief BTW </h6><br><br>
+                        <?php
+                        $query = "SELECT StockItemID FROM Aanbevolen WHERE StockItemID = " . $StockItem["StockItemID"];
+                        $result = mysqli_query($connection, $query);
+                        $row = mysqli_fetch_array($result);
+                        if(empty($row)){
+                            ?>
+                            <p class="StockItemPriceText"><b><?php print sprintf("€ %.2f", $StockItem["SellPrice"]); ?></b></p>
+                            <h6 class="nobreak"> Inclusief BTW </h6><br><br>
+                            <?php
+                        } else {
+                            $aanbevolen = $row[0];
 
+                            if(empty($aanbevolen)){
+                                } else {
+                                $query = "SELECT Korting FROM Aanbevolen WHERE StockItemID = " . $StockItem["StockItemID"];
+                                $result = mysqli_query($connection, $query);
+                                $row = mysqli_fetch_array($result);
+                                $korting = $row[0];
+                                $prijs = $StockItem["SellPrice"];
+                                $korting1 = $prijs * ($korting / 100);
+                                $prijs1 = $prijs - $korting1;
+                            ?>
+                            <p class="StockItemPriceText"><b><?php print sprintf("€ %.2f", $prijs1); ?></b></p>
+                            <h6 class="nobreak"> Inclusief BTW </h6><br><br>
+                                <p class="nobreak" style="color: gold; font-size: xx-large">Aanbieding!</p>
+                            <?php
+                            }
+                        }
+                        ?>
                         <?php
                         //?id=1 handmatig meegeven via de URL (gebeurt normaal gesproken als je via overzicht op artikelpagina terechtkomt)
                         if (isset($_GET["id"])) {
@@ -134,17 +162,16 @@ if($r){
                         <form method="post">
                             <input type="number" name="stockItemID" value="<?php print($stockItemID) ?>" hidden>
                             <input type="submit" name="submit" value="Voeg toe aan winkelmandje" style="height:30px; width:250px; background-color:#23232F; color:#676EFF; border-color:#676EFF">
-                            <input type="number" name="amount" value="1" style="height:30px; width:250px; background-color:#23232F; color:#FFFFFF; border-color:#676EFF">
+                            <input type="number" name="amount" value="1" min="1" style="height:30px; width:250px; background-color:#23232F; color:#FFFFFF; border-color:#676EFF">
                         </form>
                         <?php
-
                         if (isset($_POST["submit"])) {              // zelfafhandelend formulier
                             $query = "SELECT QuantityOnHand FROM stockitemholdings WHERE StockItemID = " . $stockItemID;
                             $result = mysqli_query($connection, $query);
                             $row = mysqli_fetch_array($result);
                             $hoeveelheid = $row[0];
                             $cart = getCart();
-                            if(empty($cart["$stockItemID"])) {
+                            if(empty($cart["$stockItemID"])){
                                 $cart["$stockItemID"] = 0;
                             }
                             if ($_POST["amount"] > $hoeveelheid || ($_POST["amount"] + $cart["$stockItemID"]) > $hoeveelheid) {
@@ -182,8 +209,8 @@ if($r){
             if (is_array($CustomFields)) { ?>
                 <table>
                 <thead>
-                <th>Naam:</th>
-                <th>Data:</th>
+                <th>Naam</th>
+                <th>Data</th>
                 </thead>
                 <?php
                 foreach ($CustomFields as $SpecName => $SpecText) { ?>
