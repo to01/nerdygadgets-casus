@@ -13,8 +13,9 @@ if(isset($_SESSION["WebCustomerID"])) {
     $result = mysqli_query($connection, $query);
     $row = mysqli_fetch_row($result);
     $land = '<option value="'.$row[2].'">'.$iso_array[$row[2]]."</option>";
-    $adres = $row[3];
-    $postcode = $row[4];
+    $woonplaats = $row[3];
+    $adres = $row[4];
+    $postcode = $row[5];
 }
 ?>
 <table style="width: 100%">
@@ -284,6 +285,10 @@ if(isset($_SESSION["WebCustomerID"])) {
         </tr>
     </table>
     <table>
+        <tr> <!--woonplaats -->
+            <td><div style="text-align: right">* Woonplaats: </div></td>
+            <td><input style="height: 10%; background-color:#23232F; color: white; border-color:#676EFF" name="EditWoonplaats" <?php print($woonplaats); ?> type="text" required></td>
+        </tr>
         <tr> <!-- adres -->
             <td><div style="text-align: right">* Adres:</div></td>
             <td><input style="height: 10%; background-color:#23232F; color: white; border-color:#676EFF" name="EditAdres" placeholder="<?php print($adres) ?>" type="text" required></td>
@@ -305,6 +310,7 @@ if($_SESSION["inlogstatus"]) {
     if (isset($_POST["EditSubmit"])) {
         $id = $_SESSION["WebCustomerID"];
         $land = $_POST["EditLand"];
+        $woonplaats = $_POST["EditWoonplaats"];
         $adres = $_POST["EditAdres"];
         $postcode = $_POST["EditPostcode"];
         $host = "localhost";
@@ -313,7 +319,7 @@ if($_SESSION["inlogstatus"]) {
         $databasename = "nerdygadgets";
         $port = 3306;
         $connection = mysqli_connect($host, $user, $pass, $databasename, $port);
-        $query = "UPDATE webshopklant SET CustomerCountry = '".$land."', CustomerAddress = '".$adres."', CustomerPostalcode = '".$postcode."' WHERE WebCustomerID = ".$id;
+        $query = "UPDATE webshopklant SET CustomerCountry = '".$land."',CustomerCity = '".$woonplaats."', CustomerAddress = '".$adres."', CustomerPostalcode = '".$postcode."' WHERE WebCustomerID = ".$id;
         mysqli_query($connection, $query);
         print("<meta http-equiv='refresh' content='0, url=.'>");
     }

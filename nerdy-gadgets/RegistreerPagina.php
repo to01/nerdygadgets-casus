@@ -287,6 +287,10 @@ $connection = mysqli_connect($host, $user, $pass, $databasename, $port);
         </tr>
     </table>
     <table>
+        <tr> <!--woonplaats -->
+            <td><div style="text-align: right">* Woonplaats: </div></td>
+            <td><input style="height: 10%; background-color:#23232F; color: white; border-color:#676EFF" name="Woonplaats" placeholder="Amsterdam" type="text" required></td>
+        </tr>
         <tr> <!-- adres -->
             <td><div style="text-align: right">* Adres:</div></td>
             <td><input style="height: 10%; background-color:#23232F; color: white; border-color:#676EFF" name="BestelAdres" placeholder="Straatnaam 123" type="text" required></td>
@@ -314,6 +318,7 @@ $connection = mysqli_connect($host, $user, $pass, $databasename, $port);
 if(isset($_POST["InlogSubmit"])) {
     $naam = $_POST["BestelNaam"];
     $land = $_POST["Land"];
+    $woonplaats = $_POST["Woonplaats"];
     $adres = $_POST["BestelAdres"];
     $postcode = str_replace(" ","",$_POST["BestelPostcode"]);
     $telnr = str_replace(" ","",$_POST["phonecode"]."-".$_POST["phone"]);
@@ -325,7 +330,7 @@ if(isset($_POST["InlogSubmit"])) {
     if (isset($row[0])) {
         print("<br><h5 style='color:red'> &nbsp Deze e-mail bestaat al </h5>");
     } else {
-        $query = "INSERT INTO webshopklant VALUES ((SELECT MAX(WebCustomerID)+1 FROM webshopklant w),'".$naam."','".$land."','".$adres."','".$postcode."','".$telnr."','".$email."','".$password."',1,NULL)";
+        $query = "INSERT INTO webshopklant VALUES ((SELECT MAX(WebCustomerID)+1 FROM webshopklant w),'".$naam."','".$land."','".$woonplaats."','".$adres."','".$postcode."','".$telnr."','".$email."','".$password."',1,NULL)";
         $result = mysqli_query($connection, $query);
         print("<meta http-equiv='refresh' content='0; url=.'>");
     }
