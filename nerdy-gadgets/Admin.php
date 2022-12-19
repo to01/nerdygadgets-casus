@@ -26,15 +26,49 @@ $connection = connectToDatabase();
 
 <?php
 if(isset($_POST["AanbiedingSubmit"])) {
-    $stockitemid = $_POST["AanbiedingToevoegen"];
-    $korting = $_POST["Korting"];
-
-    $query = "SELECT StockItemID FROM aanbevolen WHERE StockItemID = " . $stockitemid;
-    $result = mysqli_query($connection, $query);
-    $row = mysqli_fetch_array($result);
-    if (!empty($row)) {
-        print("Dit item is al een aanbieding!");
+    $StockItemID = $_POST["AanbiedingWeghalen"];
+    if (!empty($StockItemID)) {
+        print("Waarschijnlijk heb je op de verkeerde knop gedrukt.");
     } else {
+        $stockitemid = $_POST["AanbiedingToevoegen"];
+        $korting = $_POST["Korting"];
+
+        $query = "SELECT StockItemID FROM aanbevolen WHERE StockItemID = " . $stockitemid;
+        $result = mysqli_query($connection, $query);
+        $row = mysqli_fetch_array($result);
+        if (!empty($row)) {
+            print("Dit item is al een aanbieding!");
+        } else {
+
+            $query = "SELECT StockItemID FROM stockitems WHERE StockItemID = " . $stockitemid;
+            $result = mysqli_query($connection, $query);
+            $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+            if (empty($row)) {
+                print("Dit item bestaat niet!");
+            } else {
+                if ($korting == "") {
+                    print("Er moet korting komen op het product!");
+                } else {
+                    if ($korting > 100 || $korting <= 0) {
+                        print("De korting moet tussen 1 en 100 zijn!");
+                    } else {
+                        $query = mysqli_prepare($connection, "INSERT INTO Aanbevolen (StockItemID, Korting) VALUES (?, ?)");
+                        mysqli_stmt_bind_param($query, 'ii', $stockitemid, $korting);
+                        mysqli_stmt_execute($query);
+                        print("Het item is toegevoegd aan aanbiedingen!");
+                    }
+                }
+            }
+        }
+    }
+}
+
+if(isset($_POST["AanbiedingWeghalenSubmit"])) {
+    $StockItemID = $_POST["AanbiedingToevoegen"];
+    if (!empty($StockItemID)) {
+        print("Waarschijnlijk heb je op de verkeerde knop gedrukt.");
+    } else {
+        $stockitemid = $_POST["AanbiedingWeghalen"];
 
         $query = "SELECT StockItemID FROM stockitems WHERE StockItemID = " . $stockitemid;
         $result = mysqli_query($connection, $query);
@@ -42,30 +76,16 @@ if(isset($_POST["AanbiedingSubmit"])) {
         if (empty($row)) {
             print("Dit item bestaat niet!");
         } else {
-            if ($korting > 100 || $korting <= 0) {
-                print("De korting moet tussen 1 en 100 zijn!");
-            } else {
-                $query = mysqli_prepare($connection, "INSERT INTO Aanbevolen (StockItemID, Korting) VALUES (?, ?)");
-                mysqli_stmt_bind_param($query, 'ii', $stockitemid, $korting);
-                mysqli_stmt_execute($query);
-                print("Het item is toegevoegd aan aanbiedingen!");
+            $query = "SELECT StockItemID FROM aanbevolen WHERE StockItemID = " . $stockitemid;
+            $result = mysqli_query($connection, $query);
+            while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+                if($row["StockItemID"] == $stockitemid){
+                    $query = mysqli_prepare($connection, "DELETE FROM Aanbevolen WHERE StockItemID = " . $stockitemid);
+                    mysqli_stmt_execute($query);
+                    print("Product is verwijderd van aanbiedingen!");
+                }
             }
         }
-    }
-}
-
-if(isset($_POST["AanbiedingWeghalenSubmit"])) {
-    $stockitemid = $_POST["AanbiedingWeghalen"];
-
-    $query = "SELECT StockItemID FROM stockitems WHERE StockItemID = " . $stockitemid;
-    $result = mysqli_query($connection, $query);
-    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-    if (empty($row)) {
-        print("Dit item bestaat niet!");
-    } else {
-        $query = mysqli_prepare($connection, "DELETE FROM Aanbevolen WHERE StockItemID = " . $stockitemid);
-        mysqli_stmt_execute($query);
-        print("Product is verwijderd van aanbiedingen!");
     }
 }
 ?>
