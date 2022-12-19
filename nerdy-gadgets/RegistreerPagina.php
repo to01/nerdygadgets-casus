@@ -325,7 +325,7 @@ if(isset($_POST["InlogSubmit"])) {
     if (isset($row[0])) {
         print("<br><h5 style='color:red'> &nbsp Deze e-mail bestaat al </h5>");
     } else {
-        $query = "INSERT INTO webshopklant VALUES ((SELECT MAX(WebCustomerID)+1 FROM webshopklant w),'".$naam."','".$land."','".$adres."','".$postcode."','".$telnr."','".$email."','".$password."',1)";
+        $query = "INSERT INTO webshopklant VALUES ((SELECT MAX(WebCustomerID)+1 FROM webshopklant w),'".$naam."','".$land."','".$adres."','".$postcode."','".$telnr."','".$email."','".$password."',1,NULL)";
         $result = mysqli_query($connection, $query);
         print("<meta http-equiv='refresh' content='0; url=.'>");
     }

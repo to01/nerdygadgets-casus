@@ -82,7 +82,8 @@ $databaseConnection = connectToDatabase();
         <ul id="ul-class-navigation">
             <li><?php
                 if(isset($_SESSION["inlogstatus"])) {
-                    $webCustomerID = $_SESSION["WebCustomerID"];
+                    if($_SESSION["inlogstatus"] == True) {
+                        $webCustomerID = $_SESSION["WebCustomerID"];
                         $query = "SELECT isAdmin FROM webshopklant WHERE WebCustomerID = " . $webCustomerID;
                         $result = mysqli_query($databaseConnection, $query);
                         $row = mysqli_fetch_array($result);
@@ -93,7 +94,6 @@ $databaseConnection = connectToDatabase();
                                 print('<a href="Admin.php"><i class="fas fa-cogs"></i> Admin </a> &nbsp');
                             }
                         }
-                    if($_SESSION["inlogstatus"] == True) {
                         print('<a href="InlogPagina.php" style="color: lawngreen" class="HrefDecoration"><i class="fas fa-user"></i>&nbsp&nbsp&nbsp&nbsp&nbsp');
                         print('<a href="UitlogPagina.php" class="HrefDecoration"><i class="fa-solid fa-right-from-bracket"></i>');
                     } else {
