@@ -241,7 +241,7 @@ if(isset($_POST["BestelSubmit"])) { // if submit is pressed
         $land = $_POST["Land"];
         $woonplaats = $_POST["Woonplaats"];
         $adres = str_replace(" ","",$_POST["BestelAdres"]);
-        $postcode = str_replace(" ","",$_POST["BestelPostcode"]);
+        $postcode = str_replace(" "," ",$_POST["BestelPostcode"]);
         $tel = str_replace(" ","",$_POST["phonecode"]."-".$_POST["phone"]);
         $query = "SELECT CustomerEmail FROM webshopklant WHERE CustomerEmail = '" . $email . "' AND isloggable = 1";
         $result = mysqli_query($connection, $query);
