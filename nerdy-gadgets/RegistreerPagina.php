@@ -320,7 +320,7 @@ if(isset($_POST["InlogSubmit"])) {
     $land = $_POST["Land"];
     $woonplaats = $_POST["Woonplaats"];
     $adres = $_POST["BestelAdres"];
-    $postcode = str_replace(" ","",$_POST["BestelPostcode"]);
+    $postcode = str_replace(" "," ",$_POST["BestelPostcode"]);
     $telnr = str_replace(" ","",$_POST["phonecode"]."-".$_POST["phone"]);
     $email = str_replace(" ","",$_POST["E-mail"]);
     $password = $_POST["wachtwoord"];
