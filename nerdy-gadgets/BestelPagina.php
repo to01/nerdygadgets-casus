@@ -50,8 +50,8 @@ if(isset($_SESSION["WebCustomerID"])) {
             <script type="text/javascript">
                 function ShowHideDiv() {
                     var zakelijk = document.getElementById("zakelijk");
-                    var bedrijfnaam = document.getElementById("bedrijfnaam");
-                    bedrijfnaam.style.display = zakelijk.checked ? "block" : "none";
+                    var bedrijfsnaam = document.getElementById("bedrijfsnaam");
+                    bedrijfsnaam.style.display = zakelijk.checked ? "block" : "none";
                 }
             </script>
             <tr> <!-- Radio -->
@@ -62,7 +62,7 @@ if(isset($_SESSION["WebCustomerID"])) {
                 <td><input style="height: 10%" type="radio" id="zakelijk" name="besteller" value="1" onclick="ShowHideDiv()"></td>
             </tr>
         </table>
-        <div id="bedrijfnaam" style="display: none" >
+        <div id="bedrijfsnaam" style="display: none" >
             <table style="margin-left: 35px">
                 <tr> <!--bedrijfsnaam -->
                     <td>* Bedrijfsnaam:</td>
@@ -98,7 +98,7 @@ if(isset($_SESSION["WebCustomerID"])) {
             </tr>
             <tr> <!-- postcode -->
                 <td><div style="text-align: right; width:140px">* Postcode:</div></td>
-                <td><input style="height: 10%; background-color:#23232F; color: white; border-color:#676EFF" name="BestelPostcode" <?php print($postcode); ?> type="text" placeholder="1234 AB" required pattern="[0-9]{4}[A-Z]{2}|[0-9]{4} [A-Z]{2}"></td>
+                <td><input style="height: 10%; background-color:#23232F; color: white; border-color:#676EFF" name="BestelPostcode" <?php print($postcode); ?> type="text" placeholder="1234 AB" required pattern="[0-9]{4} [A-Z]{2}"></td>
             </tr>
         </table>
         <table>
@@ -239,6 +239,7 @@ if(isset($_POST["BestelSubmit"])) { // if submit is pressed
         $naam = $_POST["BestelNaam"];
         $email = $_POST["E-mail"];
         $land = $_POST["Land"];
+        $woonplaats = $_POST["Woonplaats"];
         $adres = str_replace(" ","",$_POST["BestelAdres"]);
         $postcode = str_replace(" ","",$_POST["BestelPostcode"]);
         $tel = str_replace(" ","",$_POST["phonecode"]."-".$_POST["phone"]);
@@ -248,7 +249,7 @@ if(isset($_POST["BestelSubmit"])) { // if submit is pressed
         if (isset($row[0])) {
             print("<br><h5 style='color:red'> &nbsp Deze e-mail heeft al een account!</h5>");
         } else {
-        $query = "INSERT INTO webshopklant VALUES ((SELECT max(WebCustomerID)+1 FROM webshopklant w),'".$naam."','".$land."','".$adres."','".$postcode."','".$tel."','".$email."',0,0)";
+        $query = "INSERT INTO webshopklant VALUES ((SELECT max(WebCustomerID)+1 FROM webshopklant w),'".$naam."','".$land."','".$woonplaats."','".$adres."','".$postcode."','".$tel."','".$email."',0,0,NULL)";
         $result = mysqli_query($connection, $query);
         // haalt ID van nieuwe klant op
         $query = "SELECT WebCustomerID FROM webshopklant WHERE WebCustomerID = (SELECT MAX(WebCustomerID) FROM webshopklant w)";
@@ -257,10 +258,13 @@ if(isset($_POST["BestelSubmit"])) { // if submit is pressed
         $id = $row[0];
         $date = date("Y-m-d");
         $business = $_POST["besteller"];
+        $WebOrderBusiness = $_POST["BedrijfsNaam"];
         $WebOrderPostalcode = $_POST["BestelPostcode"];
         $WebOrderAdress = $_POST["BestelAdres"];
+        $WebOrderCity = $_POST["Woonplaats"];
         $WebOrderCountry = $_POST["Land"];
-        $query = "INSERT INTO webshoporders VALUES ((SELECT max(WebOrderID)+1 FROM webshoporders w)," . $id . ",'" . $date . "'," . $business . ",'" . $WebOrderCountry ."','" . $WebOrderAdress ."','" . $WebOrderPostalcode ."')"; // creates new order for customer
+        $OrderTotalPrice = $totaalprijs;
+            $query = "INSERT INTO webshoporders VALUES ((SELECT max(WebOrderID)+1 FROM webshoporders w)," . $id . ",'" . $date . "'," . $business . ",'" . $WebOrderCountry ."','" . $WebOrderCity ."','" . $WebOrderAdress ."','" . $WebOrderPostalcode ."','" . $WebOrderBusiness ."','" . $OrderTotalPrice ."')"; // creates new order for customer
         $result = mysqli_query($connection, $query);
         $query = "SELECT MAX(weborderid) FROM webshoporders"; // gets orderid to fill orderlines later
         $result = mysqli_query($connection, $query);
