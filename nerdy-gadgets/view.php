@@ -194,16 +194,16 @@ if($r){
                                     $_POST["amount"] = rtrim(rtrim(number_format($_POST["amount"], '0')));
                                     addProductAmountToCart($stockItemID, $_POST["amount"]);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
                                     print("Product toegevoegd");
-                                    print("<a href='cart.php'> Winkelmand bekijken</a>");
+                                    print("<meta http-equiv='refresh'  content='0'>");
                                 } elseif ($_POST["amount"] >= 1) {
                                     addProductAmountToCart($stockItemID, $_POST["amount"]);         // maak gebruik van geïmporteerde functie uit cartfuncties.php
                                     print("Product toegevoegd");
-                                    print("<a href='cart.php'> Winkelmand bekijken</a>");
+                                    print("<meta http-equiv='refresh'  content='0'>");
                                 } else {
                                     print("Voer een geldig cijfer in!");
                                 }
                             }
-                        }
+                        }print("<a href='cart.php'> Winkelmand bekijken</a>");
                         ?>
                     </div>
                 </div>
