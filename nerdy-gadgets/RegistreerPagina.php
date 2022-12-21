@@ -26,7 +26,7 @@ $connection = mysqli_connect($host, $user, $pass, $databasename, $port);
         </tr>
         <tr>
             <td><div style="text-align: right">* Wachtwoord</div></td>
-            <td><input style="height: 10%; background-color:#23232F; color:#676EFF; border-color:#676EFF" name="wachtwoord" type="password" required></td>
+            <td><input style="height: 10%; background-color:#23232F; color:#676EFF; border-color:#676EFF" name="wachtwoord" type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*?[!@#$%^&*+`~'=?\|\]\[\(\)\-<>/]).{8,}" title="Moet minstens 1 cijfer, 1 speciaal karakter en 1 hoofdletter en kleine letter bevatten, en ten minste 8 of meer tekens" required></td>
         </tr>
     </table>
     <table>
