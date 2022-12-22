@@ -73,6 +73,7 @@ foreach($cart as $id => $hoeveelheid) {
         $prijs0 = $prijs - $korting1;
         $prijs1 = $prijs0 * $hoeveelheid;
         $totaalprijs += $prijs1;
+        $prijs = $prijs - $korting1;
     }
     if (isset($_POST["Verwijderen".$id])) {
         deleteProductFromCart($id);

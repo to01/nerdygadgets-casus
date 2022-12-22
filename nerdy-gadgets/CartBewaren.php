@@ -112,8 +112,27 @@ if(isset($_POST["BewarenSubmit"])){
         $result = mysqli_query($connection, $query);
         $row = mysqli_fetch_row($result);
         $prijs = $row[0];
-        $prijs1 = $prijs * $hoeveelheid;
-        $totaalprijs += $prijs1;
+
+        $query = "SELECT Korting FROM Aanbevolen WHERE StockItemID = " . $id;
+        $result = mysqli_query($connection, $query);
+        $row = mysqli_fetch_array($result);
+        if(empty($row)){
+            $korting = 0;
+        } else {
+            $korting = $row[0];
+        }
+
+        if(empty($korting)){
+            $prijs1 = $prijs * $hoeveelheid;
+            $totaalprijs += $prijs1;
+        } else {
+            $korting1 = $prijs * ($korting / 100);
+            $prijs0 = $prijs - $korting1;
+            $prijs1 = $prijs0 * $hoeveelheid;
+            $totaalprijs += $prijs1;
+            $prijs = $prijs - $korting1;
+        }
+
         $message .= "
             <tr>
                <td class='CartId nobreak'>".$id."</td><td>$name</td><td>$hoeveelheid</td><td class='CartId'>" . sprintf("€ %.2f", $prijs) . "</td><td class='StockItemPriceText'>" . sprintf("€ %.2f", $prijs1) . "</td>
@@ -136,5 +155,5 @@ if(isset($_POST["BewarenSubmit"])){
     $headers[] = 'Content-type: text/html; charset=iso-8859-1';
     mail($to, $subject, $message, implode("\r\n", $headers));
 
-    print("<meta http-equiv='refresh' content='0; url=.'>");
+//    print("<meta http-equiv='refresh' content='0; url=.'>");
 }
