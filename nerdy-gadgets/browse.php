@@ -329,6 +329,7 @@ if (isset($amount)) {
                         } else {
                             addProductToCart($stockItemID);
                             print("<p style='color: white'>Product toegevoegd</p>");
+                            print("<meta http-equiv='refresh'  content='0'>");
                         }
                     }
                     ?>

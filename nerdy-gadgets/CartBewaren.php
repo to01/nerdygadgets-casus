@@ -63,7 +63,8 @@ if(isset($_SESSION["WebCustomerID"])) {
     </form>
 <?php
 if(empty($cart)) {
-    print("<div style='color: red'>Uw winkelwagen is nog leeg!</>"); }
+    print("<div style='color: red' > Uw winkelwagen is nog leeg!</>");
+}
 $cart = getCart();
 $totaalprijs = 0;
 foreach($cart as $id => $hoeveelheid) {

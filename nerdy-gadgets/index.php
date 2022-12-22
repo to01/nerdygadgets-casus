@@ -73,7 +73,7 @@ if(!empty($aanbevolen)) {
         print("
     <table style='float: left; width: 300px'>
     <tr>
-    <td colspan='3'><img style='width: 200px;' src='$path'></td>
+    <td colspan='3'><img style='width: 200px; margin-top: 10px' src='$path'></td>
     </tr>
     <tr>
     <td colspan='3'><a href='view.php?id=" . $id . "' style='color: &#xf1f8'>Artikelnummer: $id</td>

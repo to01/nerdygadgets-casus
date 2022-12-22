@@ -26,7 +26,7 @@ if(isset($_SESSION["WebCustomerID"])) {
     $row = mysqli_fetch_row($result);
     $telarray = explode("-",$row[6]);
     $phonecode = $telarray[0];
-    $phonenumber = $telarray[0];
+    $phonenumber = $telarray[1];
     $naam = 'value="'.$row[1].'" disabled';
     $email = 'value="'.$row[7].'" disabled';
     $land = ' value="'.$row[2].'">'.$iso_array[$row[2]];
@@ -177,8 +177,7 @@ if(empty($cart)) {
             $korting1 = $prijs * ($korting / 100);
             $prijs0 = $prijs - $korting1;
             $prijs1 = $prijs0 * $hoeveelheid;
-            $totaalprijs += $prijs0;
-            $prijs = $prijs - $korting1;
+            $totaalprijs += $prijs1;
         }
         ?>
         <td style='width:40%'>
@@ -211,6 +210,7 @@ if(empty($cart)) {
         </form>
         </table>
         <?php
+    }
         date_default_timezone_set('Europe/Amsterdam');
 
         if(isset($_POST["BestelSubmit"])) { // if submit is pressed
@@ -222,13 +222,13 @@ if(empty($cart)) {
                 $sqlemail = $row[6]; // email belonging to customerID
                 $date = date("Y-m-d"); // sets date in the format of MYSQL
                 $business = $_POST["besteller"]; // checks if customer is a business or a person
-                $WebOrderBusiness = $_POST["BedrijfNaam"];
+                $WebOrderBusiness = $_POST["BedrijfsNaam"];
                 $WebOrderPostalcode = $loginpostcode;
                 $WebOrderCity = $logincity;
                 $WebOrderAdress = $loginadres;
                 $WebOrderCountry = $loginland;
                 $OrderTotalPrice = $totaalprijs;
-                $query = "INSERT INTO webshoporders VALUES ((SELECT max(WebOrderID)+1 FROM webshoporders w)," . $id . ",'" . $date . "'," . $business . ",'" . $WebOrderCountry ."','" . $WebOrderAdress ."','" . $WebOrderPostalcode ."')"; // creates new order for customer
+                $query = "INSERT INTO webshoporders VALUES ((SELECT max(WebOrderID)+1 FROM webshoporders w)," . $id . ",'" . $date . "'," . $business . ",'" . $WebOrderCountry ."','" . $WebOrderCity ."','" . $WebOrderAdress ."','" . $WebOrderPostalcode ."','" . $WebOrderBusiness ."','" . $OrderTotalPrice ."')"; // creates new order for customer
                 $result = mysqli_query($connection, $query);
                 $query = "SELECT MAX(weborderid) FROM webshoporders"; // gets orderid to fill orderlines later
                 $result = mysqli_query($connection, $query);
@@ -357,4 +357,3 @@ if(empty($cart)) {
 
         print("<meta http-equiv='refresh' content='0; url=.'>");
     }
-}
