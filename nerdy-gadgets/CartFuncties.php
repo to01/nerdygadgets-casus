@@ -24,6 +24,7 @@ function addProductToCart($stockItemID){
 
     saveCart($cart);                            // werk de "gedeelde" $_SESSION["cart"] bij met de bijgewerkte cart
 }
+
 function removeProductFromCart($stockItemID){
     $cart = getCart();                          // eerst de huidige cart ophalen
 
@@ -38,6 +39,7 @@ function removeProductFromCart($stockItemID){
 }
 function deleteProductFromCart($stockItemID){
     $cart = getCart();
+
     if(array_key_exists($stockItemID, $cart)) {
         unset($cart[$stockItemID]);                 // verwijdert het product uit de winkelmand door het passende element uit de array te gooien
     }
@@ -58,4 +60,10 @@ function addProductAmountToCart($stockItemID, $amount){
     }
 
     saveCart($cart);                            // werk de "gedeelde" $_SESSION["cart"] bij met de bijgewerkte cart
+}
+
+function aanbieding($korting){
+    if($aanbieding > 0){
+        return print("<p class='nobreak' style='color: gold; font-size: xx-large'>Aanbieding!</p>");
+    }
 }

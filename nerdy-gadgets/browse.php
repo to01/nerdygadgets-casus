@@ -12,7 +12,7 @@ $connection = mysqli_connect($host, $user, $pass, $databasename, $port);
 
 $ReturnableResult = null;
 $Sort = "SellPrice";
-$SortName = "price_low_high";
+        $SortName = "price_low_high";
 
 $AmountOfPages = 0;
 $queryBuildResult = "";
@@ -105,9 +105,9 @@ if ($SearchString != "") {
 
 $Offset = $PageNumber * $ProductsOnPage;
 
-if ($CategoryID != "") {
+if ($CategoryID != "") { 
     if ($queryBuildResult != "") {
-        $queryBuildResult .= " AND ";
+    $queryBuildResult .= " AND ";
     }
 }
 
@@ -154,7 +154,7 @@ if ($CategoryID == "") {
 // einde deel 2 van User story: Zoeken producten
 
 if ($CategoryID !== "") {
-    $Query = "
+$Query = "
            SELECT SI.StockItemID, SI.StockItemName, SI.MarketingComments, TaxRate, RecommendedRetailPrice,
            ROUND(SI.TaxRate * SI.RecommendedRetailPrice / 100 + SI.RecommendedRetailPrice,2) as SellPrice,
            QuantityOnHand,
@@ -191,19 +191,19 @@ if (isset($amount)) {
 }
 
 
-function getVoorraadTekst($actueleVoorraad) {
-    if ($actueleVoorraad > 1000) {
-        return "Ruime voorraad beschikbaar.";
-    } else {
-        return "Voorraad: $actueleVoorraad";
+    function getVoorraadTekst($actueleVoorraad) {
+        if ($actueleVoorraad > 1000) {
+            return "Ruime voorraad beschikbaar.";
+        } else {
+            return "Voorraad: $actueleVoorraad";
+        }
     }
-}
-function berekenVerkoopPrijs($adviesPrijs, $btw) {
-    if($adviesPrijs < 0) {
-        $adviesPrijs = 0;
+    function berekenVerkoopPrijs($adviesPrijs, $btw) {
+        if($adviesPrijs < 0) {
+            $adviesPrijs = 0;
+        }
+            return $btw * $adviesPrijs / 100 + $adviesPrijs;
     }
-    return $btw * $adviesPrijs / 100 + $adviesPrijs;
-}
 ?>
 
 <!-- code deel 3 van User story: Zoeken producten : de html -->
@@ -267,7 +267,7 @@ function berekenVerkoopPrijs($adviesPrijs, $btw) {
             ?>
             <!--  coderegel 1 van User story: bekijken producten  -->
             <a class="ListItem" href='view.php?id=<?php print $row['StockItemID']; ?>'>
-                <!-- einde coderegel 1 van User story: bekijken producten   -->
+            <!-- einde coderegel 1 van User story: bekijken producten   -->
                 <div id="ProductFrame">
                     <?php
                     if (isset($row['ImagePath'])) { ?>
@@ -281,8 +281,30 @@ function berekenVerkoopPrijs($adviesPrijs, $btw) {
 
                     <div id="StockItemFrameRight">
                         <div class="CenterPriceLeftChild">
+                            <?php
+                            $query = "SELECT Korting FROM Aanbevolen WHERE StockItemID = " . $row["StockItemID"];
+                            $result = mysqli_query($connection, $query);
+                            $array = mysqli_fetch_array($result);
+                            if(empty($array)){
+                            ?>
                             <h1 class="StockItemPriceText"><?php print sprintf("€ %0.2f", berekenVerkoopPrijs($row["RecommendedRetailPrice"], $row["TaxRate"])); ?></h1>
                             <h6>Inclusief BTW </h6>
+                            <?php
+                            } else {
+                                $korting = $array[0];
+                                if(empty($korting)){
+                                    $korting = 0;
+                                } else {
+                                    $korting1 = (berekenVerkoopPrijs($row["RecommendedRetailPrice"], $row["TaxRate"])) * ($korting / 100);
+                                    $prijs1 = (berekenVerkoopPrijs($row["RecommendedRetailPrice"], $row["TaxRate"])) - $korting1;
+                                ?>
+                                    <h1 class="StockItemPriceText"><?php print sprintf("€ %0.2f", $prijs1); ?></h1>
+                                    <h6>Inclusief BTW </h6>
+                                    <p class="nobreak" style="color: gold; font-size: xx-large">Aanbieding!</p>
+                                <?php
+                                }
+                            }
+                            ?>
                         </div>
                     </div>
                     <h1 class="StockItemID">Artikelnummer: <?php print $row["StockItemID"]; ?></h1>
@@ -312,22 +334,22 @@ function berekenVerkoopPrijs($adviesPrijs, $btw) {
                     ?>
                     <h4 class="ItemQuantity"><?php print getVoorraadTekst($row["QuantityOnHand"]); ?></h4>
                 </div>
-                <!--  coderegel 2 van User story: bekijken producten  -->
-            </a>
+            <!--  coderegel 2 van User story: bekijken producten  -->
+            </a> 
             <!--  einde coderegel 2 van User story: bekijken producten  -->
         <?php } ?>
 
         <form id="PageSelector">
+		
+<!-- code deel 4 van User story: Zoeken producten  -->
 
-            <!-- code deel 4 van User story: Zoeken producten  -->
-
-            <input type="hidden" name="search_string" id="search_string"
+<input type="hidden" name="search_string" id="search_string"
                    value="<?php if (isset($_GET['search_string'])) {
                        print ($_GET['search_string']);
                    } ?>">
             <input type="hidden" name="sort" id="sort" value="<?php print ($_SESSION['sort']); ?>">
 
-            <!-- einde code deel 4 van User story: Zoeken producten  -->
+<!-- einde code deel 4 van User story: Zoeken producten  -->
             <input type="hidden" name="category_id" id="category_id" value="<?php if (isset($_GET['category_id'])) {
                 print ($_GET['category_id']);
             } ?>">
